@@ -4,4 +4,4 @@ Harnaś (pol. kind of highlander) - system meant to be used by educational insti
 
 ## Technologies
 
-- [https://github.com/zielmicha/hera](Hera) - sandbox used to protect against malicious users.
+- [Hera](https://github.com/zielmicha/hera) - sandbox used to protect against malicious users.
