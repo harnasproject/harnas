@@ -28,6 +28,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.flatpages',
     'bootstrap3',
+    'harnas.home',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -46,10 +47,7 @@ ROOT_URLCONF = 'harnas.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            'templates',
-            'flatpages',
-        ],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
