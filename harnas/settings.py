@@ -24,6 +24,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
+    'bootstrap3',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -42,7 +45,10 @@ ROOT_URLCONF = 'harnas.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            'templates',
+            'flatpages',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -91,6 +97,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Sites
+SITE_ID = 1
 
 with open(BASE_DIR + '/local_settings.py', 'r') as f:
     exec(f.read())

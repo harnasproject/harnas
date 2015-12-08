@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load bootstrap3 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript jquery=1 %}
+  <title>
+    {% block title %}
+      Harnaś
+    {% endblock %}
+  </title>
+</head>
+<body>
+  {% bootstrap_messages %}
+  <div id="content">
+    {% block content %}
+    {% endblock %}
+  </div>
+</body>
