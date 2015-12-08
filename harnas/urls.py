@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.contrib.flatpages import views
 
 urlpatterns = [
+    url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', include(admin.site.urls)),
 ]
 
