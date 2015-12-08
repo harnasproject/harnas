@@ -28,6 +28,12 @@ Set up the database:
 ./manage.py migrate
 ```
 
+Load initial data:
+
+```
+ ./manage.py loaddata initial-data.yaml
+```
+
 Create superuser:
 
 ```

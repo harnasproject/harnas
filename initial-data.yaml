@@ -1,0 +1,10 @@
+- fields:
+    content: Hello!
+    enable_comments: false
+    registration_required: false
+    sites: [1]
+    template_name: ''
+    title: Hello
+    url: /
+  model: flatpages.flatpage
+  pk: 1

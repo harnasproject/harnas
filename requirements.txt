@@ -2,3 +2,4 @@ Django>=1.8,<1.9
 psycopg2>=2.6,<2.7
 django-bootstrap3>=4.8,<4.9
 django-grappelli>=2.7.2,<2.8
+PyYAML>=3.11,<4
