@@ -1,10 +1,34 @@
 - fields:
-    content: Hello!
+    content: <h1>Authors</h1>
     enable_comments: false
     registration_required: false
     sites: [1]
     template_name: ''
-    title: Hello
-    url: /
+    title: "Harna\u015B | Authors"
+    url: /authors/
   model: flatpages.flatpage
   pk: 1
+- fields:
+    content: "<h1>Harna\u015B</h1>\r\n<em>(pol. kind of highlander)</em> - system
+      meant to be used by educational institutions, which focues on automated checking
+      of programming assigments. We want to provide easy to use, highly configurable
+      environment, which can handle different technologies from C++ through SQL to
+      CUDA."
+    enable_comments: false
+    registration_required: false
+    sites: [1]
+    template_name: ''
+    title: "Harna\u015B | About"
+    url: /about/
+  model: flatpages.flatpage
+  pk: 2
+- fields:
+    content: "<div class=\"centered\">\r\n  <h1>Hey! It's a hut of Harna\u015B!</h1>\r\n</div>"
+    enable_comments: false
+    registration_required: false
+    sites: [1]
+    template_name: ''
+    title: "Harna\u015B | Homepage"
+    url: /
+  model: flatpages.flatpage
+  pk: 3
