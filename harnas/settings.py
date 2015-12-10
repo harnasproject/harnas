@@ -29,6 +29,8 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'bootstrap3',
     'harnas.home',
+    'harnas.contest',
+    'guardian',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -56,6 +58,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'harnas.contest.processors.contests',
             ],
         },
     },
@@ -101,5 +104,17 @@ STATIC_URL = '/static/'
 # Sites
 SITE_ID = 1
 
+ANONYMOUS_USER_ID = -1
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 with open(BASE_DIR + '/local_settings.py', 'r') as f:
     exec(f.read())
+
+# User may change AUTHENTICATION_BACKENDS for LDAP login etc
+
+AUTHENTICATION_BACKENDS = AUTHENTICATION_BACKENDS + (
+    'guardian.backends.ObjectPermissionBackend',
+)
