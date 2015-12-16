@@ -29,6 +29,8 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'bootstrap3',
     'harnas.home',
+    'registration',
+    'crispy_forms',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -100,6 +102,11 @@ STATIC_URL = '/static/'
 
 # Sites
 SITE_ID = 1
+
+# Registration redux
+ACCOUNT_ACTIVATION_DAYS = 7
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 with open(BASE_DIR + '/local_settings.py', 'r') as f:
     exec(f.read())
