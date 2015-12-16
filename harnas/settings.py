@@ -31,6 +31,8 @@ INSTALLED_APPS = (
     'harnas.home',
     'registration',
     'crispy_forms',
+    'harnas.contest',
+    'guardian',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -58,6 +60,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'harnas.contest.processors.contests',
             ],
         },
     },
@@ -108,5 +111,16 @@ ACCOUNT_ACTIVATION_DAYS = 7
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
+ANONYMOUS_USER_ID = -1
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 with open(BASE_DIR + '/local_settings.py', 'r') as f:
     exec(f.read())
+
+# User may change AUTHENTICATION_BACKENDS for LDAP login etc
+
+AUTHENTICATION_BACKENDS = AUTHENTICATION_BACKENDS + (
+    'guardian.backends.ObjectPermissionBackend',
+)
