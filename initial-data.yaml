@@ -23,7 +23,10 @@
   model: flatpages.flatpage
   pk: 2
 - fields:
-    content: "<div class=\"centered\">\r\n  <h1>Hey! It's a hut of Harna\u015B!</h1>\r\n</div>"
+    content: "<div class=\"centered\">\r\n  <h1>\r\n    Hello!\r\n  </h1>\r\n  <p>\r\n
+      \   Harna\u015B is currently under active development. If you would like to
+      help testing this system please contact site admin, but be wary, that the database
+      could be dropped or malformed any moment.\r\n  </p>\r\n</div>"
     enable_comments: false
     registration_required: false
     sites: [1]
