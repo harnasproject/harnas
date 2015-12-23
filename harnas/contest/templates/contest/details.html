@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ block.super }} | {{ contest.name }}
+{% endblock %}
+{% block content %}
+    <p>
+        {{ contest.description }}
+    </p>
+{% endblock %}

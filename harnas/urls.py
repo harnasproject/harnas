@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^checker/', include('harnas.checker.urls')),
+    url(r'^contest/', include('harnas.contest.urls')),
 ]
 
 urlpatterns += [

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ block.super }} | Contests
+{% endblock %}
+{% block content %}
+    <h1>Your contests</h1>
+    <table class="table table-striped">
+        <tr>
+            <th>Name</th>
+        </tr>
+        {% for contest in contests %}
+            <tr>
+                <td><a href="{% url 'contest_details' contest.pk %}">{{ contest.name }}</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
