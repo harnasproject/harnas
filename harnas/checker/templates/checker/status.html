@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ block.super }} | Status
+{% endblock %}
+{% block content %}
+    <h1>Checking cluster status</h1>
+    <table class="table table-striped">
+        <tr>
+           <th>Address</th>
+            <th>Slots</th>
+            <th>Memory [MB]</th>
+        </tr>
+        {% for node in nodes %}
+        <tr>
+            <td>{{ node.address.0 }}:{{ node.address.1 }}</td>
+            <td>{{ node.resources.slots }}</td>
+            <td>{{ node.resources.memory }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -29,8 +29,7 @@ try:
 except ImportError:
     import http.client as httplib
 
-from django.conf import settings
-URL = 'http://api.hera.dev/' if settings.HERA_URL is None else settings.HERA_URL
+URL = os.environ.get('HERA_URL', 'http://api.hera.dev/')
 
 default_auth = None
 

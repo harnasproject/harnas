@@ -33,6 +33,8 @@ INSTALLED_APPS = (
     'crispy_forms',
     'harnas.contest',
     'guardian',
+    'harnas.checker',
+    'django_extensions',
 )
 
 MIDDLEWARE_CLASSES = (
