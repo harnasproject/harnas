@@ -34,11 +34,9 @@
             <ul class="dropdown-menu">
               <li class="dropdown-header">Your contests</li>
               <li role="separator" class="divider"></li>
-              {% if contests %}
               {% for contest in contests %}
-              <li><a href="#">{{ contest.title }}</a></li>
+              <li><a href="#">{{ contest.name }}</a></li>
               {% endfor %}
-              {% endif %}
             </ul>
           </li>
           <li><a href="/about/">About us</a></li>
