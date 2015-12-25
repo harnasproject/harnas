@@ -37,6 +37,9 @@
               {% for contest in contests|slice:":3" %}
               <li><a href="{% url 'contest_details' contest.pk %}">{{ contest.name }}</a></li>
               {% endfor %}
+              {% if perms.contest.add_contest %}
+              <li><a href="{% url 'contest_new' %}">New contest</a></li>
+              {% endif %}
             </ul>
           </li>
           <li><a href="{% url 'about' %}">About us</a></li>
