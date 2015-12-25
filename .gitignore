@@ -2,3 +2,5 @@
 /local_settings.py
 *.sublime-workspace
 /db.sqlite3
+htmlcov/
+.coverage
