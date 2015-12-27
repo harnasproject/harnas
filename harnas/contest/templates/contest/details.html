@@ -1,9 +1,45 @@
 {% extends 'base.html' %}
+{% load guardian_tags %}
 {% block title %}
     {{ block.super }} | {{ contest.name }}
 {% endblock %}
 {% block content %}
-    <p>
-        {{ contest.description }}
-    </p>
+    {% get_obj_perms request.user for contest as "contest_perms" %}
+    <h1>
+        {{ contest.name }}
+    </h1>
+    <nav>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation">
+                <a href="#description" aria-controls="description" role="tab" data-toggle="tab">
+                    Description
+                </a>
+            </li>
+            <li role="presentation" class="active">
+                <a href="#news" aria-controls="news" role="tab" data-toggle="tab">
+                    News
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="" aria-controls="" role="tab" data-toggle="tab"></a>
+            </li>
+            {% if 'manager' in contest_perms %}
+            <li role="presentation">
+                <a href="#edit" aria-controls="edit" role="tab" data-toggle="tab">
+                    Edit
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="tab-content">
+        <div class="tab-pane" role="tabpanel" id="description">
+            {{ contest.description }}
+        </div>
+        <div class="tab-pane active" role="tabpanel" id="news"></div>
+        <div class="tab-pane" role="tabpanel" id=""></div>
+        {% if 'manager' in contest_perms %}
+        <div class="tab-pane" role="tabpanel" id="edit"></div>
+        {% endif %}
+    </div>
 {% endblock %}

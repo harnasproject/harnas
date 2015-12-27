@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Contest(models.Model):
     name = models.CharField(max_length=250)
     slug = models.SlugField()
@@ -17,6 +18,7 @@ class Contest(models.Model):
     def __str__(self):
         return self.name
 
+
 class News(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField()
@@ -28,11 +30,13 @@ class News(models.Model):
     def __str__(self):
         return self.title
 
+
 class TestEnvironment(models.Model):
     template_name = models.CharField(max_length=250)
 
     def __str__(self):
-        return template_name
+        return self.template_name
+
 
 class Task(models.Model):
     name = models.CharField(max_length=250)
@@ -41,7 +45,8 @@ class Task(models.Model):
     test_environment = models.ForeignKey(TestEnvironment)
 
     def __str__(self):
-        return name
+        return self.name
+
 
 class TestCase(models.Model):
     task = models.ForeignKey(Task)
