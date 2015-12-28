@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='contest_index'),
-    url(r'^([0-9]+)$', views.details, name='contest_details'),
-    url(r'^new/$', views.new, name='contest_new'),
+    url(r'^(?P<id>\d+)/$', views.details, name='contest_details'),
+    url(r'^new/$', views.edit, name='contest_new'),
+    url(r'^edit/(?P<id>\d+)/$', views.edit, name='contest_edit'),
 ]

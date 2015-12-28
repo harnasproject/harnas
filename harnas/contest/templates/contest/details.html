@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load guardian_tags %}
+{% load crispy_forms_tags %}
 {% block title %}
     {{ block.super }} | {{ contest.name }}
 {% endblock %}
@@ -23,7 +24,7 @@
             <li role="presentation">
                 <a href="" aria-controls="" role="tab" data-toggle="tab"></a>
             </li>
-            {% if 'manager' in contest_perms %}
+            {% if 'manage' in contest_perms %}
             <li role="presentation">
                 <a href="#edit" aria-controls="edit" role="tab" data-toggle="tab">
                     Edit
@@ -38,8 +39,14 @@
         </div>
         <div class="tab-pane active" role="tabpanel" id="news"></div>
         <div class="tab-pane" role="tabpanel" id=""></div>
-        {% if 'manager' in contest_perms %}
-        <div class="tab-pane" role="tabpanel" id="edit"></div>
+        {% if 'manage' in contest_perms %}
+        <div class="tab-pane" role="tabpanel" id="edit">
+            <form action="{% url 'contest_edit' contest.pk %}" method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" value="Submit" class="btn btn-default">
+            </form>
+        </div>
         {% endif %}
     </div>
 {% endblock %}

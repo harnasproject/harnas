@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.forms import ModelForm
 
 
 class Contest(models.Model):
@@ -12,11 +13,18 @@ class Contest(models.Model):
     class Meta:
         permissions = (
             ('view', 'Can view'),
-            ('participant', 'Can participate'),
-            ('manager', 'Can manage contest'))
+            ('participate', 'Can participate'),
+            ('manage', 'Can manage contest'))
 
     def __str__(self):
         return self.name
+
+
+class ContestForm(ModelForm):
+
+    class Meta:
+        model = Contest
+        fields = ['name', 'slug', 'description']
 
 
 class News(models.Model):
