@@ -6,6 +6,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
 from guardian.shortcuts import assign_perm
+from django.core.cache import cache
+from django.core.cache.utils import make_template_fragment_key
 
 
 @require_safe
@@ -45,5 +47,7 @@ def edit(request, id=None):
         new_contest = form.save()
         assign_perm('contest.manage', request.user, new_contest)
         assign_perm('contest.view', request.user, new_contest)
+        cache_key = make_template_fragment_key('contest_description', [new_contest.pk])
+        cache.delete(cache_key)
         return HttpResponseRedirect(reverse('contest_details', args=(new_contest.pk,)))
     return render(request, 'contest/new.html', { 'form': form })

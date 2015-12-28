@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load guardian_tags %}
 {% load crispy_forms_tags %}
+{% load pandoc_convert %}
+{% load cache %}
 {% block title %}
     {{ block.super }} | {{ contest.name }}
 {% endblock %}
@@ -35,7 +37,9 @@
     </nav>
     <div class="tab-content">
         <div class="tab-pane" role="tabpanel" id="description">
-            {{ contest.description }}
+        {% cache 86400 contest_description contest.pk %}
+            {{ contest.description|to_html }}
+        {% endcache %}
         </div>
         <div class="tab-pane active" role="tabpanel" id="news"></div>
         <div class="tab-pane" role="tabpanel" id=""></div>
