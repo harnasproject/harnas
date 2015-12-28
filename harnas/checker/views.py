@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from heraclient import get_cluster
+from harnas.checker.heraclient import get_cluster
 from django.conf import settings
 from django.views.decorators.http import require_safe
 
