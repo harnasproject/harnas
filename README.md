@@ -5,6 +5,7 @@ Harnaś (pol. kind of highlander) - system meant to be used by educational insti
 ## Technologies
 
 - [Hera](https://github.com/zielmicha/hera) - sandbox used to protect against malicious users.
+- [pandoc](http://pandoc.org/) - tool used to provide easy to use markup language (pandoc flavored markdown) and then converting it to html/pdf. You need to install it manually, probably form your distro repository.
 
 ## Setting up
 
