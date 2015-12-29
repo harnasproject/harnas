@@ -9,6 +9,7 @@ class Contest(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
+    creator = models.ForeignKey(User)
 
     class Meta:
         permissions = (
@@ -51,9 +52,17 @@ class Task(models.Model):
     short_name = models.CharField(max_length=3)
     description = models.TextField()
     test_environment = models.ForeignKey(TestEnvironment)
+    author = models.ForeignKey(User)
 
     def __str__(self):
         return self.name
+
+
+class TaskForm(ModelForm):
+
+    class Meta:
+        model = Task
+        fields = ['name', 'short_name', 'description']
 
 
 class TestCase(models.Model):

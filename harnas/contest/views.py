@@ -44,7 +44,10 @@ def edit(request, id=None):
         if not request.user.has_perm('contest.manage', contest):
             raise PermissionDenied
     if form.is_valid():
-        new_contest = form.save()
+        new_contest = form.save(commit=False)
+        if id is None:
+            new_contest.creator_id = request.user.pk
+        new_contest.save()
         assign_perm('contest.manage', request.user, new_contest)
         assign_perm('contest.view', request.user, new_contest)
         cache_key = make_template_fragment_key('contest_description', [new_contest.pk])
