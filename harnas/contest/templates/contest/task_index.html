@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ block.super }} | Tasks
+{% endblock %}
+{% block content %}
+    <h1>Tasks</h1>
+    <table class="table table-striped">
+        <tr>
+            <th>Short name</th>
+            <th>Name</th>
+            <th>Author</th>
+        </tr>
+        {% for task in tasks %}
+            <tr>
+                <td><a href="{% url 'task_details' task.pk %}">{{ task.short_name }}</a></td>
+                <td>{{ task.name }}</td>
+                <td>{{ task.author }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

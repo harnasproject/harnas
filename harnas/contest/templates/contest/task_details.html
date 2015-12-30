@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load pandoc_convert %}
+{% load cache %}
+{% block title %}
+    {{ block.super }} | {{ task.name }}
+{% endblock %}
+{% block content %}
+    <h1>
+        [{{ task.short_name }}] {{ task.name }}
+    </h1>
+    <hr>
+    <p>
+    {% cache 86400 task_description task.pk %}
+        {{ task.description|to_html }}
+    {% endcache %}
+    </p>
+{% endblock %}
