@@ -18,18 +18,20 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-import requests
-import json
 import io
+import json
 import os
 import socket
+
+import requests
+
+from django.conf import settings
 
 try:
     import httplib
 except ImportError:
     import http.client as httplib
 
-from django.conf import settings
 URL = 'http://api.hera.dev/' if settings.HERA_URL is None else settings.HERA_URL
 
 default_auth = None

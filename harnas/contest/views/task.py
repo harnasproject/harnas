@@ -1,13 +1,13 @@
-from django.shortcuts import render
-from harnas.contest.models import Task, TaskForm
-from guardian.decorators import permission_required
-from django.views.decorators.http import require_safe, require_http_methods
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
-from django.core.exceptions import PermissionDenied
-from guardian.shortcuts import assign_perm
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
+from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.views.decorators.http import require_http_methods, require_safe
+from guardian.decorators import permission_required
+from guardian.shortcuts import assign_perm
+from harnas.contest.models import Task, TaskForm
 
 
 @require_safe

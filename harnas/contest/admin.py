@@ -1,6 +1,6 @@
 from django.contrib import admin
-from harnas.contest import models
 from guardian.admin import GuardedModelAdmin
+from harnas.contest import models
 
 
 class ContestAdmin(GuardedModelAdmin):

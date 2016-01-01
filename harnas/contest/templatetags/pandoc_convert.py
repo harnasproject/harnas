@@ -1,10 +1,9 @@
+import bleach
+import pypandoc
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
-import pypandoc
-import bleach
-from harnas.contest.bleach_whitelist import print_tags, print_attrs, all_styles
-
+from harnas.contest.bleach_whitelist import all_styles, print_attrs, print_tags
 
 register = template.Library()
 

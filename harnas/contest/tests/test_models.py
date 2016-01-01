@@ -1,5 +1,5 @@
 from django.test import TestCase
-from harnas.contest.models import Contest, News, TestEnvironment, Task
+from harnas.contest.models import Contest, News, Task, TestEnvironment
 from mock import Mock
 
 
