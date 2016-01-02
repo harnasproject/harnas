@@ -36,7 +36,6 @@ def edit(request, id=None):
         new_task = form.save(commit=False)
         if id is None:
             new_task.author_id = request.user.pk
-            new_task.test_environment_id = 1
         new_task.save()
         cache_key = make_template_fragment_key('task_description', [new_task.pk])
         cache.delete(cache_key)

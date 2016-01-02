@@ -48,14 +48,17 @@
             <ul class="dropdown-menu">
               <li><a href="{% url 'about' %}">About us</a></li>
               <li><a href="{% url 'authors' %}">Authors</a></li>
-              <li><a href="{% url 'checker_status' %}">Cluster status</a></li>
+              <li><a href="{% url 'cluster_status' %}">Cluster status</a></li>
             </ul>
           </li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Task manager<span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="{% url 'task_index' %}">View</a></li>
-              <li><a href="{% url 'task_new' %}">Add new</a></li>
+              <li><a href="{% url 'task_index' %}">Task list</a></li>
+              <li><a href="{% url 'task_new' %}">New task</a></li>
+              <li><a href="{% url 'template_index' %}">Template list</a></li>
+              <li><a href="{% url 'test_environment_index' %}">Test environments list</a></li>
+              <li><a href="{% url 'test_environment_new' %}">New test environment</a></li>
             </ul>
           </li>
         </ul>

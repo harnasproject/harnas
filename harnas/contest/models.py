@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
+from harnas.checker.models import TestEnvironment
 
 
 class Contest(models.Model):
@@ -40,13 +41,6 @@ class News(models.Model):
         return self.title
 
 
-class TestEnvironment(models.Model):
-    template_name = models.CharField(max_length=250)
-
-    def __str__(self):
-        return self.template_name
-
-
 class Task(models.Model):
     name = models.CharField(max_length=250)
     short_name = models.CharField(max_length=3)
@@ -62,7 +56,7 @@ class TaskForm(ModelForm):
 
     class Meta:
         model = Task
-        fields = ['name', 'short_name', 'description']
+        fields = ['name', 'short_name', 'description', 'test_environment']
 
 
 class TestCase(models.Model):

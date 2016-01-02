@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ block.super }} | Template list
+{% endblock %}
+{% block content %}
+    <table class="table table-striped">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+        </tr>
+        {% for template in templates %}
+        <tr>
+            <td>{{ template.0 }}</td>
+            <td>{{ template.1 }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

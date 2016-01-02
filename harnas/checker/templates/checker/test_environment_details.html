@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load pandoc_convert %}
+{% load cache %}
+{% block title %}
+    {{ block.super }} | Test environment
+{% endblock %}
+{% block content %}
+    <div class="page-header">
+        <div class="pull-left">
+            <h1>{{ test_env.template_name }}</h1>
+        </div>
+        <div class="pull-right">
+            <h1><span class="small">{{ test_env.maintainer }}</span></h1>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <p class="lead">{{ test_env.summary }}</p>
+    <p>
+    {% cache 86400 test_environment_description test_env.pk %}
+        {{ test_env.description|to_html }}
+    {% endcache %}
+    </p>
+{% endblock %}

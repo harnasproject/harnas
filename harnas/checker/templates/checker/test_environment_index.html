@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}
+    {{ block.super }} | Test environment list
+{% endblock %}
+{% block content %}
+    <h1>Test environment list</h1>
+    <table class="table table-striped">
+        <tr>
+            <th>Template name</th>
+            <th>Summary</th>
+            <th>Maintainer</th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for test_env in test_envs %}
+        <tr>
+            <td>{{ test_env.template_name }}</td>
+            <td>{{ test_env.summary }}</td>
+            <td>{{ test_env.maintainer }}</td>
+            <td>
+                <a href="{% url 'test_environment_details' test_env.pk %}" class="btn btn-default">
+                    Details
+                </a>
+            </td>
+            <td>
+                <a href="{% url 'test_environment_edit' test_env.pk %}" class="btn btn-default">
+                    Edit
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
