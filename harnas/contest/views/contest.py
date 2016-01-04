@@ -12,7 +12,7 @@ from harnas.contest.models import Contest, ContestForm
 
 @require_safe
 def index(request):
-    return render(request, 'contest/index.html')
+    return render(request, 'contest/contest_index.html')
 
 
 def get_contest_and_form(request, id=None):
@@ -31,16 +31,18 @@ def get_contest_and_form(request, id=None):
 @permission_required('contest.view', (Contest, 'id', 'id'))
 def details(request, id):
     (contest, form) = get_contest_and_form(request, id)
-    return render(request, 'contest/details.html', { 'contest': contest, 'form': form })
+    return render(request, 'contest/contest_details.html', { 'contest': contest, 'form': form })
 
 
 @require_http_methods(['GET', 'POST'])
 def edit(request, id=None):
     (contest, form) = get_contest_and_form(request, id)
     if id is None:
+        form_post = reverse('contest_new')
         if not request.user.has_perm('contest.add_contest'):
             raise PermissionDenied
     else:
+        form_post = reverse('contest_edit', args=[id])
         if not request.user.has_perm('contest.manage', contest):
             raise PermissionDenied
     if form.is_valid():
@@ -52,5 +54,5 @@ def edit(request, id=None):
         assign_perm('contest.view', request.user, new_contest)
         cache_key = make_template_fragment_key('contest_description', [new_contest.pk])
         cache.delete(cache_key)
-        return HttpResponseRedirect(reverse('contest_details', args=(new_contest.pk,)))
-    return render(request, 'contest/new.html', { 'form': form })
+        return HttpResponseRedirect(reverse('contest_details', args=[new_contest.pk]))
+    return render(request, 'contest/contest_new.html', { 'form': form, 'form_post': form_post })

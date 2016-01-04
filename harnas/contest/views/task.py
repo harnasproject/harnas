@@ -26,8 +26,10 @@ def details(request, id):
 def edit(request, id=None):
     if id:
         task = Task.objects.get(pk=id)
+        form_post = reverse('task_edit', args=[id])
     else:
         task = Task()
+        form_post = reverse('task_new')
     if request.method == "POST":
         form = TaskForm(request.POST, instance=task)
     else:
@@ -39,5 +41,5 @@ def edit(request, id=None):
         new_task.save()
         cache_key = make_template_fragment_key('task_description', [new_task.pk])
         cache.delete(cache_key)
-        return HttpResponseRedirect(reverse('task_details', args=(new_task.pk,)))
-    return render(request, 'contest/task_new.html', {'form': form})
+        return HttpResponseRedirect(reverse('task_details', args=[new_task.pk]))
+    return render(request, 'contest/task_new.html', {'form': form, 'form_post': form_post})

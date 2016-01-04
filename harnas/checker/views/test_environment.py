@@ -23,9 +23,11 @@ def details(request, id):
 def edit(request, id=None):
     if id:
         test_env = TestEnvironment.objects.get(pk=id)
+        form_post = reverse('test_environment_edit', args=[id])
     else:
-        # Will crush if user is anonymous
+        # Will crush if user is anonymous, but this shouldn't happen
         test_env = TestEnvironment(maintainer=request.user)
+        form_post = reverse('test_environment_new')
     if request.method == "POST":
         form = TestEnvironmentForm(request.POST, instance=test_env)
     else:
@@ -35,5 +37,5 @@ def edit(request, id=None):
         # I suppose there is a nicer way to do this, but it works.
         new_test_env.template_name = form.cleaned_data['template_name']
         new_test_env.save()
-        return HttpResponseRedirect(reverse('test_environment_details', args=(new_test_env.pk,)))
-    return render(request, 'checker/test_environment_new.html', {'form': form})
+        return HttpResponseRedirect(reverse('test_environment_details', args=[new_test_env.pk]))
+    return render(request, 'checker/test_environment_new.html', {'form': form, 'form_post': form_post})

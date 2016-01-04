@@ -5,7 +5,7 @@
     {{ block.super }} | New task
 {% endblock %}
 {% block content %}
-    <form action="{% url 'task_new' %}" method="post">
+    <form action="{{ form_post }}" method="post">
         {% csrf_token %}
         {{ form|crispy }}
         <input type="submit" value="Submit" class="btn btn-default">
