@@ -35,7 +35,7 @@ class News(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User)
-    contest_id = models.ForeignKey(Contest)
+    contest = models.ForeignKey(Contest)
 
     def __str__(self):
         return self.title
