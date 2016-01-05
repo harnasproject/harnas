@@ -26,7 +26,7 @@ class ContestForm(ModelForm):
 
     class Meta:
         model = Contest
-        fields = ['name', 'slug', 'description']
+        fields = ['name', 'description']
 
 
 class News(models.Model):

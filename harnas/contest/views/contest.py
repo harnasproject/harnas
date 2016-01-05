@@ -4,6 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.utils.text import slugify
 from django.views.decorators.http import require_http_methods, require_safe
 from guardian.decorators import permission_required
 from guardian.shortcuts import assign_perm
@@ -47,6 +48,7 @@ def edit(request, id=None):
             raise PermissionDenied
     if form.is_valid():
         new_contest = form.save(commit=False)
+        new_contest.slug = slugify(new_contest.name)
         if id is None:
             new_contest.creator_id = request.user.pk
         new_contest.save()
