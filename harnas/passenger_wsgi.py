@@ -1,8 +1,6 @@
 import os
 import sys
 
-from django.core.wsgi import get_wsgi_application
-
 app_name = 'harnas'
 env_name = 'harnas'
 
@@ -16,6 +14,8 @@ if sys.executable != INTERP: os.execl(INTERP, INTERP, *sys.argv)
 sys.path.insert(0, cwd + '/.venvs/' + env_name + '/bin')
 sys.path.insert(0, cwd + '/.venvs/' + env_name + '/lib/python3.4/site-packages/django')
 sys.path.insert(0, cwd + '/.venvs/' + env_name + '/lib/python3.4/site-packages')
+
+from django.core.wsgi import get_wsgi_application # isort:skip
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'settings')
 
