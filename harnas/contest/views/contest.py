@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from django.core.exceptions import PermissionDenied
@@ -16,36 +17,31 @@ def index(request):
     return render(request, 'contest/contest_index.html')
 
 
-def get_contest_and_form(request, id=None):
-    if id:
-        contest = Contest.objects.get(pk=id)
-    else:
-        contest = Contest()
-    if request.method == 'POST':
-        form = ContestForm(request.POST, instance=contest)
-    else:
-        form = ContestForm(instance=contest)
-    return (contest, form)
-
-
 @require_safe
 @permission_required('contest.view', (Contest, 'id', 'id'))
 def details(request, id):
-    (contest, form) = get_contest_and_form(request, id)
+    contest = Contest.objects.get(pk=id)
+    form = ContestForm(instance=contest)
     return render(request, 'contest/contest_details.html', { 'contest': contest, 'form': form })
 
 
 @require_http_methods(['GET', 'POST'])
+@login_required
 def edit(request, id=None):
-    (contest, form) = get_contest_and_form(request, id)
-    if id is None:
+    if id:
+        contest = Contest.objects.get(pk=id)
+        form_post = reverse('contest_edit', args=[id])
+        if not request.user.has_perm('contest.manage',contest):
+            raise PermissionDenied
+    else:
+        contest = Contest()
         form_post = reverse('contest_new')
         if not request.user.has_perm('contest.add_contest'):
             raise PermissionDenied
+    if request.method == 'POST':
+        form = ContestForm(request.POST, instance=contest)
     else:
-        form_post = reverse('contest_edit', args=[id])
-        if not request.user.has_perm('contest.manage', contest):
-            raise PermissionDenied
+        form = ContestForm(instance=contest)
     if form.is_valid():
         new_contest = form.save(commit=False)
         new_contest.slug = slugify(new_contest.name)

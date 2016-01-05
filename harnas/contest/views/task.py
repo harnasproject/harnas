@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from django.core.exceptions import PermissionDenied
@@ -23,6 +24,7 @@ def details(request, id):
 
 
 @require_http_methods(['GET', 'POST'])
+@login_required
 def edit(request, id=None):
     if id:
         task = Task.objects.get(pk=id)

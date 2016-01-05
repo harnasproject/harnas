@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -20,6 +21,7 @@ def details(request, id):
 
 
 @require_http_methods(['GET', 'POST'])
+@login_required
 def edit(request, id=None):
     if id:
         test_env = TestEnvironment.objects.get(pk=id)
