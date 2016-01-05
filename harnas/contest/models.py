@@ -37,6 +37,9 @@ class News(models.Model):
     author = models.ForeignKey(User)
     contest = models.ForeignKey(Contest)
 
+    class Meta:
+        verbose_name_plural = "news"
+
     def __str__(self):
         return self.title
 
