@@ -22,3 +22,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 HERA_USER = ""
 HERA_API_KEY = ""
 HERA_URL = "http://api.hera.dev/"
+HERA_AUTH = (HERA_USER, HERA_API_KEY)
