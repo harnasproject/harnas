@@ -5,10 +5,20 @@
     {{ block.super }} | {{ task.name }}
 {% endblock %}
 {% block content %}
-    <h1>
-        [{{ task.short_name }}] {{ task.name }}
-    </h1>
-    <hr>
+    <div class="page_header">
+        <div class="pull-left">
+            <h1>[{{ task.short_name }}] {{ task.name }} </h1>
+        </div>
+        <div class="pull-right">
+            <h1>
+                <span class="small">
+                    {{ task.author }} |
+                    <a href="{% url 'test_environment_details' task.test_environment.pk %}">{{ task.test_environment }}</a>
+                </span>
+            </h1>
+        </div>
+        <div class="clearfix"></div>
+    </div>
     <p>
     {% cache 86400 task_description task.pk %}
         {{ task.description|to_html }}
