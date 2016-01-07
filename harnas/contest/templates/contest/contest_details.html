@@ -53,7 +53,6 @@
                     <tr><td>
                         <table style="width: 100%">
                             <tr>
-                                <td><h4> <strong> {{ news.title }} </strong></h4></td>
                                 <td class="text-right">
                                     {% if 'manage' in contest_perms %}
                                         <a href="" class="btn btn-default btn-xs"> Edit</a>
@@ -63,7 +62,10 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="3"> {{ news.description }} </td>
+                                <td><h4> <strong> {{ news.title }} </strong></h4></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"> {{ news.description }} <br><br></td>
                             </tr>
                         </table>
                     </td></tr>
