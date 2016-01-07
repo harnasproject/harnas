@@ -47,7 +47,26 @@
             {{ contest.description|to_html }}
         {% endcache %}
         </div>
-        <div class="tab-pane active" role="tabpanel" id="news"></div>
+        <div class="tab-pane active" role="tabpanel" id="news">
+            <table class = "table .table-hover" >
+                {% for news in contest.news_set.all %}
+                    <tr><td>
+                        <table style="width: 100%">
+                            <tr>
+                                <td><h4> {{ news.title }}</h4></td>
+                                <td style="text-align: right"><em> {{ news.created_at }}</em></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"> {{ news.description }} </td>
+                            </tr>
+                        </table>
+                    </td></tr>
+                {% endfor %}
+                {% if 'manage' in contest_perms %}
+                    <tr><td>place for form</td></tr>
+                {% endif %}
+            </table>
+        </div>
         <div class="tab-pane" role="tabpanel" id=""></div>
         {% if 'manage' in contest_perms %}
         <div class="tab-pane" role="tabpanel" id="edit">
