@@ -63,7 +63,13 @@
                     </td></tr>
                 {% endfor %}
                 {% if 'manage' in contest_perms %}
-                    <tr><td>place for form</td></tr>
+                    <tr><td>
+                        <form action="{% url 'add_news' contest.pk %}" method="post">
+                            {% csrf_token %}
+                            {{ news_form|crispy }}
+                            <input type="submit" value="Submit" class="btn btn-default">                           
+                        </form>
+                    </td></tr>
                 {% endif %}
             </table>
         </div>

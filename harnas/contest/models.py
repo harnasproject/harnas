@@ -44,6 +44,13 @@ class News(models.Model):
         return self.title
 
 
+class NewsForm(ModelForm):
+    
+    class Meta:
+        model = News
+        fields = ['title', 'description']
+
+
 class Task(models.Model):
     name = models.CharField(max_length=250)
     short_name = models.CharField(max_length=3)
