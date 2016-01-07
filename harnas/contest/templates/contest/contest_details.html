@@ -55,7 +55,7 @@
                             <tr>
                                 <td class="text-right">
                                     {% if 'manage' in contest_perms %}
-                                        <a href="" class="btn btn-default btn-xs"> Edit</a>
+                                        <a href="{% url 'edit_news' news.pk%}" class="btn btn-default btn-xs"> Edit</a>
                                         <a href="{% url 'delete_news' news.pk%}" class="btn btn-danger btn-xs"> Delete</a>
                                     {% endif %}
                                     <em> {{ news.created_at }}</em>

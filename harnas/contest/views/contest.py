@@ -70,3 +70,14 @@ def delete_news(request, id):
     contest = news.contest
     news.delete()
     return HttpResponseRedirect(reverse('contest_details', args=[contest.pk]))
+
+def edit_news(request, id):
+    news = get_object_or_404(News, pk=id)
+    contest_pk = news.contest.pk
+    if request.method == 'POST':
+        form = NewsForm(request.POST, instance=news)
+        form.save(commit=True)
+        return HttpResponseRedirect(reverse('contest_details', args=[contest_pk]))
+    else:
+        form = NewsForm(instance=news)
+        return render(request, 'contest/news_edit.html', {'form': form})
