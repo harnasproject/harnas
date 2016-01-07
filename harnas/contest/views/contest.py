@@ -9,7 +9,7 @@ from django.utils.text import slugify
 from django.views.decorators.http import require_http_methods, require_safe
 from guardian.decorators import permission_required
 from guardian.shortcuts import assign_perm
-from harnas.contest.models import Contest, ContestForm, NewsForm
+from harnas.contest.models import Contest, ContestForm, NewsForm, News
 
 
 @require_safe
@@ -23,7 +23,7 @@ def details(request, id):
     contest = Contest.objects.get(pk=id)
     form = ContestForm(instance=contest)
     news_form = NewsForm()
-    return render(request, 'contest/contest_details.html', { 'contest': contest, 'form': news_form, 'news_form' :news_form })
+    return render(request, 'contest/contest_details.html', { 'contest': contest, 'form': form, 'news_form' :news_form })
 
 
 @require_http_methods(['GET', 'POST'])
@@ -64,3 +64,9 @@ def add_news(request, id):
                             contest=contest
                             )
     return HttpResponseRedirect(reverse('contest_details', args=[id]))
+
+def delete_news(request, id):
+    news = get_object_or_404(News, pk=id)
+    contest = news.contest
+    news.delete()
+    return HttpResponseRedirect(reverse('contest_details', args=[contest.pk]))

@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^task/new$', task.edit, name='task_new'),
     url(r'^task/edit/(?P<id>\d+)/$', task.edit, name='task_edit'),
     url(r'^contest/(?P<id>\d+)/news/new', contest.add_news, name='add_news'),
+    url(r'^contest/(?P<id>\d+)/news/delete', contest.delete_news, name='delete_news'),
 ]

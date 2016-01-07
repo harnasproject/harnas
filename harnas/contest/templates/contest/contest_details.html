@@ -53,8 +53,14 @@
                     <tr><td>
                         <table style="width: 100%">
                             <tr>
-                                <td><h4> {{ news.title }}</h4></td>
-                                <td style="text-align: right"><em> {{ news.created_at }}</em></td>
+                                <td><h4> <strong> {{ news.title }} </strong></h4></td>
+                                <td class="text-right">
+                                    {% if 'manage' in contest_perms %}
+                                        <a href="" class="btn btn-default btn-xs"> Edit</a>
+                                        <a href="{% url 'delete_news' news.pk%}" class="btn btn-danger btn-xs"> Delete</a>
+                                    {% endif %}
+                                    <em> {{ news.created_at }}</em>
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="3"> {{ news.description }} </td>
