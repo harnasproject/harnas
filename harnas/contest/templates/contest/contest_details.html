@@ -55,8 +55,8 @@
                             <tr>
                                 <td class="text-right">
                                     {% if 'manage' in contest_perms %}
-                                        <a href="{% url 'edit_news' news.pk%}" class="btn btn-default btn-xs"> Edit</a>
-                                        <a href="{% url 'delete_news' news.pk%}" class="btn btn-danger btn-xs"> Delete</a>
+                                        <a href="{% url 'news_edit' news.pk%}" class="btn btn-default btn-xs"> Edit</a>
+                                        <a href="{% url 'news_delete' news.pk%}" class="btn btn-danger btn-xs"> Delete</a>
                                     {% endif %}
                                     <em> {{ news.created_at }}</em>
                                 </td>
@@ -72,7 +72,7 @@
                 {% endfor %}
                 {% if 'manage' in contest_perms %}
                     <tr><td>
-                        <form action="{% url 'add_news' contest.pk %}" method="post">
+                        <form action="{% url 'news_add' contest.pk %}" method="post">
                             {% csrf_token %}
                             {{ news_form|crispy }}
                             <input type="submit" value="Submit" class="btn btn-default">                           

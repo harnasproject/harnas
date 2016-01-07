@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from harnas.contest.views import contest, task
+from harnas.contest.views import contest, task, news
 
 urlpatterns = [
     url(r'^contest/$', contest.index, name='contest_index'),
@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^task/(?P<id>\d+)/$', task.details, name='task_details'),
     url(r'^task/new$', task.edit, name='task_new'),
     url(r'^task/edit/(?P<id>\d+)/$', task.edit, name='task_edit'),
-    url(r'^contest/(?P<id>\d+)/news/new', contest.add_news, name='add_news'),
-    url(r'^news/delete/(?P<id>\d+)', contest.delete_news, name='delete_news'),
-    url(r'^news/edit/(?P<id>\d+)', contest.edit_news, name='edit_news'),
+    url(r'^contest/(?P<id>\d+)/news/new', news.news_new, name='news_add'),
+    url(r'^news/delete/(?P<id>\d+)', news.news_delete, name='news_delete'),
+    url(r'^news/edit/(?P<id>\d+)', news.news_edit, name='news_edit'),
 ]
