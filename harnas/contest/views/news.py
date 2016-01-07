@@ -9,12 +9,15 @@ from guardian.decorators import permission_required
 from harnas.contest.models import Contest, NewsForm, News
 
 def news_new(request, id):
-    contest = get_object_or_404(Contest, pk=id)
-    contest.news_set.create(title=request.POST['title'],
-                            description=request.POST['description'],
-                            author=request.user,
-                            contest=contest
-                            )
+    form = NewsForm(request.POST)
+    if form.is_valid():
+        contest=get_object_or_404(Contest, pk=id)
+        contest.news_set.create(
+            title=form.data['title'],
+            description=form.data['description'],
+            contest=contest,
+            author=request.user
+            )
     return HttpResponseRedirect(reverse('contest_details', args=[id]))
 
 def news_delete(request, id):
@@ -28,8 +31,8 @@ def news_edit(request, id):
     contest_pk = news.contest.pk
     if request.method == 'POST':
         form = NewsForm(request.POST, instance=news)
-        form.save(commit=True)
-        return HttpResponseRedirect(reverse('contest_details', args=[contest_pk]))
-    else:
-        form = NewsForm(instance=news)
-        return render(request, 'contest/news_edit.html', {'form': form})
+        if form.is_valid():
+            form.save(commit=True)
+            return HttpResponseRedirect(reverse('contest_details', args=[contest_pk]))
+    form = NewsForm(instance=news)
+    return render(request, 'contest/news_edit.html', {'form': form})
