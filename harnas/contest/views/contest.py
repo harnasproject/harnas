@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.utils.text import slugify
 from django.views.decorators.http import require_http_methods, require_safe
 from guardian.decorators import permission_required
-from guardian.shortcuts import assign_perm, get_users_with_perms
+from guardian.shortcuts import assign_perm
 from harnas.contest.models import Contest, ContestForm
 
 
@@ -22,6 +22,8 @@ def index(request):
 def details(request, id):
     contest = Contest.objects.get(pk=id)
     form = ContestForm(instance=contest)
+    news = contest.news_set.all().order_by('-created_at')
+    news_form = NewsForm()
     if request.user.has_perm('contest.manage', contest):
         participants = get_users_with_perms(contest, attach_perms=True)
         participants = [k for k, v in participants.items()
@@ -32,7 +34,9 @@ def details(request, id):
     return render(request, 'contest/contest_details.html',
                   { 'contest': contest,
                     'form': form,
-                    'participants': participants })
+                    'participants': participants,
+                    'news_form': news_form ,
+                    'news': news })
 
 
 @require_http_methods(['GET', 'POST'])
@@ -41,7 +45,7 @@ def edit(request, id=None):
     if id:
         contest = Contest.objects.get(pk=id)
         form_post = reverse('contest_edit', args=[id])
-        if not request.user.has_perm('contest.manage', contest):
+        if not request.user.has_perm('contest.manage',contest):
             raise PermissionDenied
     else:
         contest = Contest()

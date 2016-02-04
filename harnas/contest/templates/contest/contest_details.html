@@ -57,7 +57,40 @@
             {{ contest.description|to_html }}
         {% endcache %}
         </div>
-        <div class="tab-pane active" role="tabpanel" id="news"></div>
+        <div class="tab-pane active" role="tabpanel" id="news">
+            <table class = "table .table-hover" >
+                {% for news in contest.news_set.all %}
+                    <tr><td>
+                        <table style="width: 100%">
+                            <tr>
+                                <td class="text-right">
+                                    {% if 'manage' in contest_perms %}
+                                        <a href="{% url 'news_edit' news.pk%}" class="btn btn-default btn-xs"> Edit</a>
+                                        <a href="{% url 'news_delete' news.pk%}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure?')" > Delete</a>
+                                    {% endif %}
+                                    <em> {{ news.created_at }}</em>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><h4> <strong> {{ news.title }} </strong></h4></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"> {{ news.description }} <br><br></td>
+                            </tr>
+                        </table>
+                    </td></tr>
+                {% endfor %}
+                {% if 'manage' in contest_perms %}
+                    <tr><td>
+                        <form action="{% url 'news_add' contest.pk %}" method="post">
+                            {% csrf_token %}
+                            {{ news_form|crispy }}
+                            <input type="submit" value="Submit" class="btn btn-default">                           
+                        </form>
+                    </td></tr>
+                {% endif %}
+            </table>
+        </div>
         <div class="tab-pane" role="tabpanel" id="tasks">
             <table class="table table-striped">
                 <tr>
@@ -69,7 +102,6 @@
                     <td>task.short_name</td>
                     <td>task.name</td>
                 </tr>
-                {% endfor %}
             </table>
         </div>
         <div class="tab-pane" role="tabpanel" id=""></div>
