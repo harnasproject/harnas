@@ -21,10 +21,10 @@ def index(request):
 @permission_required('contest.view', (Contest, 'id', 'id'))
 def details(request, id):
     contest = Contest.objects.get(pk=id)
+    news = contest.news_set.all().order_by('-created_at')
     form = ContestForm(instance=contest)
     news_form = NewsForm()
-    return render(request, 'contest/contest_details.html', { 'contest': contest, 'form': form, 'news_form' :news_form })
-
+    return render(request, 'contest/contest_details.html', { 'contest': contest, 'form': form, 'news_form' :news_form , 'news' :news})
 
 @require_http_methods(['GET', 'POST'])
 @login_required

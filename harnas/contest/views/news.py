@@ -8,6 +8,7 @@ from django.views.decorators.http import require_http_methods, require_safe
 from guardian.decorators import permission_required
 from harnas.contest.models import Contest, NewsForm, News
 
+@require_http_methods(['GET', 'POST'])
 def news_new(request, id):
     form = NewsForm(request.POST)
     if form.is_valid():
@@ -20,12 +21,14 @@ def news_new(request, id):
             )
     return HttpResponseRedirect(reverse('contest_details', args=[id]))
 
+@require_safe
 def news_delete(request, id):
     news = get_object_or_404(News, pk=id)
     contest = news.contest
     news.delete()
     return HttpResponseRedirect(reverse('contest_details', args=[contest.pk]))
 
+@require_http_methods(['GET', 'POST'])
 def news_edit(request, id):
     news = get_object_or_404(News, pk=id)
     contest_pk = news.contest.pk
