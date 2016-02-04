@@ -27,7 +27,6 @@ def edit(request, id=None):
         test_env = TestEnvironment.objects.get(pk=id)
         form_post = reverse('test_environment_edit', args=[id])
     else:
-        # Will crush if user is anonymous, but this shouldn't happen
         test_env = TestEnvironment(maintainer=request.user)
         form_post = reverse('test_environment_new')
     if request.method == "POST":

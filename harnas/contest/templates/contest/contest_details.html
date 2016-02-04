@@ -30,9 +30,19 @@
                 </a>
             </li>
             <li role="presentation">
+                <a href="#tasks" aria-controls="tasks" role="tab" data-toggle="tab">
+                    Tasks
+                </a>
+            </li>
+            <li role="presentation">
                 <a href="" aria-controls="" role="tab" data-toggle="tab"></a>
             </li>
             {% if 'manage' in contest_perms %}
+            <li role="presentation">
+                <a href="#participants" aria-controls="participants" role="tab" data-toggle="tab">
+                    Participants
+                </a>
+            </li>
             <li role="presentation">
                 <a href="#edit" aria-controls="edit" role="tab" data-toggle="tab">
                     Edit
@@ -48,8 +58,36 @@
         {% endcache %}
         </div>
         <div class="tab-pane active" role="tabpanel" id="news"></div>
+        <div class="tab-pane" role="tabpanel" id="tasks">
+            <table class="table table-striped">
+                <tr>
+                    <th>Short name</th>
+                    <th>Name</th>
+                </tr>
+                {% for task in tasks %}
+                <tr>
+                    <td>task.short_name</td>
+                    <td>task.name</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
         <div class="tab-pane" role="tabpanel" id=""></div>
         {% if 'manage' in contest_perms %}
+        <div class="tab-pane" role="tabpanel" id="participants">
+                <table class="table table-striped">
+                    <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                    </tr>
+                    {% for participant in participants %}
+                    <tr>
+                        <td>{{ participant }}</td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+        </div>
         <div class="tab-pane" role="tabpanel" id="edit">
             <form action="{% url 'contest_edit' contest.pk %}" method="post">
                 {% csrf_token %}
