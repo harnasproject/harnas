@@ -4,7 +4,7 @@ from django.core.cache.utils import make_template_fragment_key
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.utils.text import slugify
 from django.views.decorators.http import require_http_methods, require_safe
 from guardian.decorators import permission_required

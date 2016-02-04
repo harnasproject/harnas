@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^task/(?P<id>\d+)/$', task.details, name='task_details'),
     url(r'^task/new$', task.edit, name='task_new'),
     url(r'^task/edit/(?P<id>\d+)/$', task.edit, name='task_edit'),
-    url(r'^contest/(?P<id>\d+)/news/new', news.news_new, name='news_add'),
-    url(r'^news/delete/(?P<id>\d+)', news.news_delete, name='news_delete'),
-    url(r'^news/edit/(?P<id>\d+)', news.news_edit, name='news_edit'),
+    url(r'^contest/(?P<id>\d+)/news/new', news.new, name='news_add'),
+    url(r'^news/delete/(?P<id>\d+)', news.delete, name='news_delete'),
+    url(r'^news/edit/(?P<id>\d+)', news.edit, name='news_edit'),
 ]
