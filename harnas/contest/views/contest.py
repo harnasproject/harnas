@@ -8,8 +8,8 @@ from django.shortcuts import render
 from django.utils.text import slugify
 from django.views.decorators.http import require_http_methods, require_safe
 from guardian.decorators import permission_required
-from guardian.shortcuts import assign_perm
-from harnas.contest.models import Contest, ContestForm
+from guardian.shortcuts import assign_perm, get_users_with_perms
+from harnas.contest.models import Contest, ContestForm, NewsForm
 
 
 @require_safe
