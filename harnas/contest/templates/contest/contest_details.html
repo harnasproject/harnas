@@ -37,7 +37,7 @@
             <li role="presentation">
                 <a href="" aria-controls="" role="tab" data-toggle="tab"></a>
             </li>
-            {% if 'manage' in contest_perms %}
+            {% if 'manage_contest' in contest_perms %}
             <li role="presentation">
                 <a href="#participants" aria-controls="participants" role="tab" data-toggle="tab">
                     Participants
@@ -64,7 +64,7 @@
                         <table style="width: 100%">
                             <tr>
                                 <td class="text-right">
-                                    {% if 'manage' in contest_perms %}
+                                    {% if 'manage_contest' in contest_perms %}
                                         <a href="{% url 'news_edit' news.pk%}" class="btn btn-default btn-xs"> Edit</a>
                                         <a href="{% url 'news_delete' news.pk%}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure?')" > Delete</a>
                                     {% endif %}
@@ -80,7 +80,7 @@
                         </table>
                     </td></tr>
                 {% endfor %}
-                {% if 'manage' in contest_perms %}
+                {% if 'manage_contest' in contest_perms %}
                     <tr><td>
                         <form action="{% url 'news_add' contest.pk %}" method="post">
                             {% csrf_token %}
@@ -106,7 +106,7 @@
             </table>
         </div>
         <div class="tab-pane" role="tabpanel" id=""></div>
-        {% if 'manage' in contest_perms %}
+        {% if 'manage_contest' in contest_perms %}
         <div class="tab-pane" role="tabpanel" id="participants">
                 <table class="table table-striped">
                     <tr>

@@ -63,6 +63,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'harnas.contest.processors.contests',
+                'harnas.home.processors.task_manager_permissions',
             ],
         },
     },

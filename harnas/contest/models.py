@@ -14,9 +14,9 @@ class Contest(models.Model):
 
     class Meta:
         permissions = (
-            ('view', 'Can view'),
-            ('participate', 'Can participate'),
-            ('manage', 'Can manage contest'))
+            ('view_contest', 'Can view'),
+            ('participate_in_contest', 'Can participate'),
+            ('manage_contest', 'Can manage contest'))
 
     def __str__(self):
         return self.name
@@ -57,6 +57,12 @@ class Task(models.Model):
     description = models.TextField()
     test_environment = models.ForeignKey(TestEnvironment)
     author = models.ForeignKey(User)
+
+    class Meta:
+        permissions = (
+            ('view_task', 'Can view task'),
+            ('submit_solution', 'Can submit solution'),
+            ('edit_task', 'Can edit task'))
 
     def __str__(self):
         return self.name

@@ -49,18 +49,24 @@
               <li><a href="{% url 'about' %}">About us</a></li>
               <li><a href="{% url 'authors' %}">Authors</a></li>
               <li><a href="{% url 'cluster_status' %}">Cluster status</a></li>
+              <li><a href="{% url 'test_environment_index' %}">Test environments</a></li>
             </ul>
           </li>
+          {% if can_view_task_manager %}
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Task manager<span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="{% url 'task_index' %}">Task list</a></li>
+              {% if can_add_task %}
               <li><a href="{% url 'task_new' %}">New task</a></li>
+              {% endif %}
               <li><a href="{% url 'template_index' %}">Template list</a></li>
-              <li><a href="{% url 'test_environment_index' %}">Test environments list</a></li>
+              {% if can_add_test_environment %}
               <li><a href="{% url 'test_environment_new' %}">New test environment</a></li>
+              {% endif %}
             </ul>
           </li>
+          {% endif %}
         </ul>
 
         <ul class="nav navbar-nav navbar-right">

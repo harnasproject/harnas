@@ -18,16 +18,16 @@ def index(request):
 
 
 @require_safe
-@permission_required('contest.view', (Contest, 'id', 'id'))
+@permission_required('contest.view_contest', (Contest, 'id', 'id'))
 def details(request, id):
     contest = Contest.objects.get(pk=id)
     form = ContestForm(instance=contest)
     news = contest.news_set.all().order_by('-created_at')
     news_form = NewsForm()
-    if request.user.has_perm('contest.manage', contest):
+    if request.user.has_perm('contest.manage_contest', contest):
         participants = get_users_with_perms(contest, attach_perms=True)
         participants = [k for k, v in participants.items()
-                        if 'participate' in v]
+                        if 'participate_in_contest' in v]
     else:
         participants = []
     print(participants)
@@ -35,7 +35,7 @@ def details(request, id):
                   { 'contest': contest,
                     'form': form,
                     'participants': participants,
-                    'news_form': news_form ,
+                    'news_form': news_form,
                     'news': news })
 
 
@@ -45,7 +45,7 @@ def edit(request, id=None):
     if id:
         contest = Contest.objects.get(pk=id)
         form_post = reverse('contest_edit', args=[id])
-        if not request.user.has_perm('contest.manage',contest):
+        if not request.user.has_perm('contest.manage_contest',contest):
             raise PermissionDenied
     else:
         contest = Contest()
@@ -62,8 +62,8 @@ def edit(request, id=None):
         if id is None:
             new_contest.creator_id = request.user.pk
         new_contest.save()
-        assign_perm('contest.manage', request.user, new_contest)
-        assign_perm('contest.view', request.user, new_contest)
+        assign_perm('contest.manage_contest', request.user, new_contest)
+        assign_perm('contest.view_contest', request.user, new_contest)
         cache_key = make_template_fragment_key('contest_description', [new_contest.pk])
         cache.delete(cache_key)
         return HttpResponseRedirect(reverse('contest_details', args=[new_contest.pk]))
