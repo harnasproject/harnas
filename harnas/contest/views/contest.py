@@ -64,7 +64,11 @@ def edit(request, id=None):
         new_contest.save()
         assign_perm('contest.manage_contest', request.user, new_contest)
         assign_perm('contest.view_contest', request.user, new_contest)
-        cache_key = make_template_fragment_key('contest_description', [new_contest.pk])
+        cache_key = make_template_fragment_key('contest_description',
+                                               [new_contest.pk])
         cache.delete(cache_key)
-        return HttpResponseRedirect(reverse('contest_details', args=[new_contest.pk]))
-    return render(request, 'contest/contest_new.html', { 'form': form, 'form_post': form_post })
+        return HttpResponseRedirect(reverse('contest_details',
+                                            args=[new_contest.pk]))
+    return render(request, 'contest/contest_new.html',
+                  { 'form': form,
+                    'form_post': form_post })
