@@ -1,6 +1,4 @@
 from guardian.shortcuts import get_objects_for_user
-from django.contrib.auth.models import User
-from harnas.contest.models import Task
 
 
 def task_manager_permissions(request):
