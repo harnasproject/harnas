@@ -7,7 +7,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.text import slugify
 from django.views.decorators.http import require_http_methods, require_safe
-from guardian.decorators import permission_required
 from guardian.shortcuts import assign_perm, get_users_with_perms
 from harnas.contest.models import Contest, ContestForm, NewsForm
 
@@ -18,9 +17,11 @@ def index(request):
 
 
 @require_safe
-@permission_required('contest.view_contest', (Contest, 'id', 'id'))
+@login_required
 def details(request, id):
     contest = Contest.objects.get(pk=id)
+    if not request.user.has_perm('contest.view_contest', contest):
+        raise PermissionDenied
     form = ContestForm(instance=contest)
     news = contest.news_set.all().order_by('-created_at')
     news_form = NewsForm()
@@ -30,7 +31,6 @@ def details(request, id):
                         if 'participate_in_contest' in v]
     else:
         participants = []
-    print(participants)
     return render(request, 'contest/contest_details.html',
                   { 'contest': contest,
                     'form': form,
@@ -45,7 +45,7 @@ def edit(request, id=None):
     if id:
         contest = Contest.objects.get(pk=id)
         form_post = reverse('contest_edit', args=[id])
-        if not request.user.has_perm('contest.manage_contest',contest):
+        if not request.user.has_perm('contest.manage_contest', contest):
             raise PermissionDenied
     else:
         contest = Contest()

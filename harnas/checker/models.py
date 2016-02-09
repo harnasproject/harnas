@@ -11,6 +11,11 @@ class TestEnvironment(models.Model):
     description = models.TextField()
     maintainer = models.ForeignKey(User)
 
+    class Meta:
+        permissions = (
+            ('view_test_environment', 'Can view test environment'),
+            ('edit_test_environment', 'Can edit test environment'))
+
     def __str__(self):
         return self.template_name
 
