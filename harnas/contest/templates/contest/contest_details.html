@@ -85,7 +85,7 @@
                         <form action="{% url 'news_add' contest.pk %}" method="post">
                             {% csrf_token %}
                             {{ news_form|crispy }}
-                            <input type="submit" value="Submit" class="btn btn-default">                           
+                            <input type="submit" value="Submit" class="btn btn-default">
                         </form>
                     </td></tr>
                 {% endif %}

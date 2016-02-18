@@ -1,11 +1,8 @@
+from django import forms
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
 from harnas.checker.models import TestEnvironment
-from django.core.files.storage import FileSystemStorage
-from django.conf import settings
-
-# test_case_fs = FileSystemStorage(location=settings.TEST_CASE_STORAGE_PREFIX)
 
 
 class Contest(models.Model):
@@ -95,3 +92,7 @@ class TestCaseForm(ModelForm):
         model = TestCase
         fields = ['task', 'max_memory', 'max_duration', 'comparator',
                   'executor', 'comparator', 'in_file_path', 'out_file_path']
+
+
+class UploadFileForm(forms.Form):
+    file = forms.FileField(label="Upload new file")

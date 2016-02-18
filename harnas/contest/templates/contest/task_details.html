@@ -2,6 +2,7 @@
 {% load pandoc_convert %}
 {% load cache %}
 {% load guardian_tags %}
+{% load crispy_forms_tags %}
 {% block title %}
     {{ block.super }} | {{ task.name }}
 {% endblock %}
@@ -48,7 +49,27 @@
             {% endcache %}
             </div>
             <div class="tab-pane" role="tabpanel" id="test_cases"></div>
-            <div class="tab-pane" role="tabpanel" id="files"></div>
+            <div class="tab-pane" role="tabpanel" id="files">
+                <form action="{% url 'task_upload_file' task.pk %}" method="post"  enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ upload_file_form|crispy }}
+                    <input type="submit" value="Submit" class="btn btn-default">
+                </form>
+                <table class="table table-striped">
+                    <tr>
+                        <th>File name</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    {% for file in task_files %}
+                    <tr>
+                        <td>{{ file }}</td>
+                        <td><a href='{% url 'task_download_file' task.pk  %}?filename={{ file }}' class="btn btn-default">Download</a></td>
+                        <td><a href='{% url 'task_delete_file' task.pk %}?filename={{ file }}' class="btn btn-default">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
     {% else %}
         <p>
