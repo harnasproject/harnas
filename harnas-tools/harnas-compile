@@ -1,0 +1,10 @@
+#!/usr/bin/python3
+import argparse
+
+languages = {
+    '': '',
+}
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(help='Compile the user program.')
+    parser.add_arguments

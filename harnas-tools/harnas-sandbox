@@ -1,0 +1,11 @@
+#!/usr/bin/python3
+import argparse
+
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(help='Run a command with limited capabilities as well as time and memory.')
+    parser.add_argument('--memlimit', help='limit memory usage')
+    parser.add_argument('--timelimit', help='limit execution time')
+    parser.add_argument('--user', help='switch user')
+    parser.add_argument('--status-fd', type=int, help='instead of displaying error message when limits are exceeded, write short info (TLE, MEM) to this fd')
