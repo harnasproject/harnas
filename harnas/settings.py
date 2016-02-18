@@ -71,28 +71,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'harnas.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'harnas',
-        'USER': 'harnas',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT':'',
-    }
-}
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': '/var/tmp/harnas_cache',
-    }
-}
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 

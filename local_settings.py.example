@@ -1,14 +1,20 @@
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': '',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
-        'PORT':'',
+        'PORT': '',
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/harnas_cache',
+    }
+}
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'w^f_54-j_3s^(e_+63d=vb7hff6%0q8^c^fvfmj7i0=^e9cos6'
@@ -23,3 +29,5 @@ HERA_USER = ""
 HERA_API_KEY = ""
 HERA_URL = "http://api.hera.dev/"
 HERA_AUTH = (HERA_USER, HERA_API_KEY)
+
+TASK_STORAGE_PREFIX = ''

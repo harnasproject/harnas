@@ -2,6 +2,10 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
 from harnas.checker.models import TestEnvironment
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+
+# test_case_fs = FileSystemStorage(location=settings.TEST_CASE_STORAGE_PREFIX)
 
 
 class Contest(models.Model):
@@ -79,3 +83,15 @@ class TestCase(models.Model):
     task = models.ForeignKey(Task)
     max_memory = models.PositiveIntegerField()
     max_duration = models.PositiveIntegerField()
+    comparator = models.CharField(max_length=500)
+    executor = models.CharField(max_length=500)
+    in_file_path = models.CharField(max_length=500)
+    out_file_path = models.CharField(max_length=500)
+
+
+class TestCaseForm(ModelForm):
+
+    class Meta:
+        model = TestCase
+        fields = ['task', 'max_memory', 'max_duration', 'comparator',
+                  'executor', 'comparator', 'in_file_path', 'out_file_path']

@@ -2,3 +2,4 @@
 django-extensions>=1.6.1,<1.7
 coverage>=4.0.3,<4.1.0
 mock>=1.3.0,<1.4.0
+werkzeug

@@ -11,7 +11,6 @@ from guardian.shortcuts import assign_perm
 from guardian.shortcuts import get_objects_for_user
 from harnas.contest.models import Task, TaskForm
 
-
 @require_safe
 @login_required
 def index(request):

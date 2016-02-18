@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 {% load pandoc_convert %}
 {% load cache %}
+{% load guardian_tags %}
 {% block title %}
     {{ block.super }} | {{ task.name }}
 {% endblock %}
 {% block content %}
+    {% get_obj_perms request.user for task as "task_perms" %}
     <div class="page_header">
         <div class="pull-left">
             <h1>[{{ task.short_name }}] {{ task.name }} </h1>
@@ -19,9 +21,40 @@
         </div>
         <div class="clearfix"></div>
     </div>
-    <p>
-    {% cache 86400 task_description task.pk %}
-        {{ task.description|to_html }}
-    {% endcache %}
-    </p>
+    {% if 'edit_task' in task_perms %}
+        <nav>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#description" aria-controls="description" role="tab" data-toggle="tab">
+                        Description
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#test_cases" aria-controls="test_cases" role="tab" data-toggle="tab">
+                        Test cases
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="#files" aria-controls="files" role="tab" data-toggle="tab">
+                        Files
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="tab-content">
+            <div class="tab-pane active" role="tabpanel" id="description">
+            {% cache 86400 task_description task.pk %}
+                {{ task.description|to_html }}
+            {% endcache %}
+            </div>
+            <div class="tab-pane" role="tabpanel" id="test_cases"></div>
+            <div class="tab-pane" role="tabpanel" id="files"></div>
+        </div>
+    {% else %}
+        <p>
+        {% cache 86400 task_description task.pk %}
+            {{ task.description|to_html }}
+        {% endcache %}
+        </p>
+    {% endif %}
 {% endblock %}
