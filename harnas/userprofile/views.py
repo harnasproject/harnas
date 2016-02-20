@@ -4,6 +4,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.views.decorators.http import require_GET
+from datetime import date
 
 from harnas.userprofile.forms import UserFieldsForm, UserProfileEditForm
 
@@ -11,8 +12,13 @@ from harnas.userprofile.forms import UserFieldsForm, UserProfileEditForm
 @require_GET
 def show(request, user_id):
     try:
+        user = User.objects.get(id=user_id)
+        today = date.today()
+        born = user.userprofile.date_of_birth
         return render(request, 'profile.html', {
-            'user': User.objects.get(id=user_id)
+            'user': user,
+            'profile': user.userprofile,
+            'age': today.year - born.year - ((today.month, today.day) < (born.month, born.day))
         })
     except User.DoesNotExist:
         raise Http404
