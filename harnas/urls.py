@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'^accounts/', include('harnas.userprofile.urls')),
     url(r'^checker/', include('harnas.checker.urls')),
     url(r'^', include('harnas.contest.urls')),
 ]

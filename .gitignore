@@ -1,7 +1,11 @@
+reset_database.sh
+.idea
+.gitignore
 *.pyc
 /local_settings.py
 *.sublime-workspace
 /db.sqlite3
+harnas.db
 htmlcov/
 .coverage
 .vagrant/

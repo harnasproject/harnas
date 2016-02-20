@@ -74,7 +74,7 @@
           <li><a href="{% url 'auth_login' %}">Log in</a></li>
           <li><a href="{% url 'registration_register' %}">Sign up</a></li>
           {% else %}
-          <li><a href="#">{{ user.username }}</a></li>
+          <li><a href="{% url 'account_settings' %}">{{ user.username }}</a></li>
           <li><a href="{% url 'auth_logout' %}">Log out</a></li>
           {% endif %}
         </ul>

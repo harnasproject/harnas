@@ -28,13 +28,14 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.flatpages',
     'bootstrap3',
-    'harnas.home',
     'registration',
     'crispy_forms',
-    'harnas.contest',
     'guardian',
-    'harnas.checker',
     'django_extensions',
+    'harnas.home',
+    'harnas.contest',
+    'harnas.checker',
+    'harnas.userprofile',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -112,3 +113,6 @@ with open(BASE_DIR + '/local_settings.py', 'r') as f:
 AUTHENTICATION_BACKENDS = AUTHENTICATION_BACKENDS + (
     'guardian.backends.ObjectPermissionBackend',
 )
+
+# user profile module
+AUTH_PROFILE_MODULE = 'userprofile.UserProfile'
