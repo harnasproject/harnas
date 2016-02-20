@@ -8,6 +8,7 @@
 
     <form method="POST" action="">
         {% csrf_token %}
+
         <fieldset>
             {{ user_form|crispy }}
             {{ profile_form|crispy }}
