@@ -15,6 +15,11 @@ class UserProfile(models.Model):
         ('H', 'Hobbyist')
     )
 
+    SEX_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female')
+    )
+
     user = models.OneToOneField(
           User,
           primary_key=True
@@ -26,6 +31,10 @@ class UserProfile(models.Model):
     )
     date_of_birth = models.DateField(
           default=timezone.now
+    )
+    sex = models.CharField(
+        default='M',
+        choices=SEX_CHOICES
     )
     personal_page = models.URLField(
           null=True,
