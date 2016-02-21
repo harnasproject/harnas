@@ -4,14 +4,24 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12 col-md-4" id="profile_data_small_container">
-        <ul>
+        <ul class="list-unstyled">
+            <li id="gravatar"><img src="{{ gravatar }}"></li>
             {% if profile.show_email %}
-            <li class="profile_data_sml"><a href="mailto:{{ user.email }}">{{ user.email }}</a></li>
+            <li class="profile_data_sml">
+                <span class="glyphicon glyphicon-envelope"></span>
+                <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+            </li>
             {% endif %}
             {% if profile.personal_page %}
-            <li class="profile_data_sml"><a href="{{ profile.personal_page }}" target="_blank">Personal page</a></li>
+            <li class="profile_data_sml">
+                <span class="glyphicon glyphicon-home"></span>
+                <a href="{{ profile.personal_page }}" target="_blank">Personal page</a>
+            </li>
             {% endif %}
-            <li class="profile_data_sml">{{ profile.get_organization_display }}</li>
+            <li class="profile_data_sml">
+                <span class="glyphicon glyphicon-education"></span>
+                {{ profile.get_organization_display }}
+            </li>
             <li class="profile_data_sml">{{ age }} years old</li>
         </ul>
     </div>
