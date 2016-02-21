@@ -4,24 +4,24 @@
 
 {% block content %}
 
-    <h1>{{ user.username }}</h1>
+<h3>{{ user.username }} {% trans 'settings' %}</h3>
 
-    <form method="POST" action="">
-        {% csrf_token %}
+<form method="POST" action="">
+    {% csrf_token %}
 
-        <fieldset>
-            {{ user_form|crispy }}
-            {{ profile_form|crispy }}
-            <input class="btn btn-default" type="submit" value="{% trans 'Submit' %}" />
-        </fieldset>
-    </form>
+    <fieldset>
+        {{ user_form|crispy }}
+        {{ profile_form|crispy }}
+        <input class="btn btn-default" type="submit" value="{% trans 'Submit' %}"/>
+    </fieldset>
+</form>
 
-    <a href="{% url 'auth_password_reset' %}"> {% trans 'Change your password' %}</a>
+<a href="{% url 'auth_password_reset' %}"> {% trans 'Change your password' %}</a>
 
 {% endblock %}
 
 {% comment %}
 
-    Basic page used to edit profile info.
+Basic page used to edit profile info.
 
 {% endcomment %}

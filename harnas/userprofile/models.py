@@ -41,9 +41,11 @@ class UserProfile(models.Model):
 
 def create_user_profile(sender, instance, created, **kwargs):
     """
-    Function used to create user profile instance right after new user is created.
+    Function used to create user profile instance right after new user is
+    created.
     """
     if created:
         UserProfile.objects.create(user=instance)
+
 
 post_save.connect(create_user_profile, sender=User)

@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
+from registration.forms import RegistrationFormUniqueEmail
+
 from harnas.userprofile.models import UserProfile
 
 
