@@ -79,8 +79,8 @@
               {{ user.first_name }} {{ user.last_name }} <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="{% url 'account_profile' user.pk %}">Profile</a></li>
-              <li><a href="{% url 'account_settings' %}">Edit</a></li>
+              <li><a href="{% url 'account_profile' user.pk %}">View profile</a></li>
+              <li><a href="{% url 'account_settings' %}">Settings</a></li>
               <li class="divider"></li>
               <li><a href="{% url 'auth_logout' %}">Log out</a></li>
             </ul>
