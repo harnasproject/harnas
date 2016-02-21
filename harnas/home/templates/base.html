@@ -44,7 +44,7 @@
             </ul>
           </li>
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Info<span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Info <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="{% url 'about' %}">About us</a></li>
               <li><a href="{% url 'authors' %}">Authors</a></li>
@@ -54,7 +54,7 @@
           </li>
           {% if can_view_task_manager %}
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Task manager<span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Task manager <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="{% url 'task_index' %}">Task list</a></li>
               {% if can_add_task %}
@@ -75,7 +75,9 @@
           <li><a href="{% url 'registration_register' %}">Sign up</a></li>
           {% else %}
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account<span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              {{ user.first_name }} {{ user.last_name }} <span class="caret"></span>
+            </a>
             <ul class="dropdown-menu">
               <li><a href="{% url 'account_profile' user.pk %}">Profile</a></li>
               <li><a href="{% url 'account_settings' %}">Edit</a></li>
