@@ -33,6 +33,7 @@ class UserProfile(models.Model):
           default=timezone.now
     )
     sex = models.CharField(
+        max_length=1,
         default='M',
         choices=SEX_CHOICES
     )

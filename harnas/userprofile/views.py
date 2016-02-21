@@ -2,33 +2,31 @@ from datetime import date
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import render, render_to_response
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.views.decorators.http import require_safe
 
 from harnas.userprofile.forms import UserFieldsForm, UserProfileEditForm
-from harnas.userprofile.utils import gravatar_for_email
+from harnas.userprofile.utils import gravatar_for_user
 
 
 @require_safe
+@login_required
 def show(request, user_id):
     """
     :return: profile of a user specified by user_id.
     """
-    try:
-        user = User.objects.get(id=user_id)
-        today = date.today()
-        born = user.userprofile.date_of_birth
-        return render(request, 'profile.html', {
-            'user': user,
-            'profile': user.userprofile,
-            'age': today.year - born.year - (
-                (today.month, today.day) < (born.month, born.day)),
-            'gravatar': gravatar_for_email(user.email, 200)
-        })
-    except User.DoesNotExist:
-        raise Http404
+    user = get_object_or_404(User, pk=user_id)
+    today = date.today()
+    born = user.userprofile.date_of_birth
+    return render(request, 'profile.html', {
+        'user': user,
+        'profile': user.userprofile,
+        'age': today.year - born.year - (
+            (today.month, today.day) < (born.month, born.day)),
+        'gravatar': gravatar_for_user(user)
+    })
 
 
 @login_required
