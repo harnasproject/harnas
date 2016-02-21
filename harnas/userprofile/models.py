@@ -5,6 +5,9 @@ from django.utils import timezone
 
 
 class UserProfile(models.Model):
+    """
+    Model used to extend user account informations.
+    """
     ORGANIZATION_CHOICES = (
         ('U', 'University'),
         ('J', 'Jagiellonian University'),
@@ -37,8 +40,10 @@ class UserProfile(models.Model):
 
 
 def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Function used to create user profile instance right after new user is created.
+    """
     if created:
         UserProfile.objects.create(user=instance)
-
 
 post_save.connect(create_user_profile, sender=User)

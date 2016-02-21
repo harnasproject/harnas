@@ -12,6 +12,9 @@ from harnas.userprofile.forms import UserFieldsForm, UserProfileEditForm
 
 @require_safe
 def show(request, user_id):
+    """
+    :return: profile of a user specified by user_id.
+    """
     try:
         user = User.objects.get(id=user_id)
         today = date.today()

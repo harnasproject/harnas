@@ -16,6 +16,12 @@
         </fieldset>
     </form>
 
-    <a href="{% url 'auth_password_reset' %}"> Change your password</a>
+    <a href="{% url 'auth_password_reset' %}"> {% trans 'Change your password' %}</a>
 
 {% endblock %}
+
+{% comment %}
+
+    Basic page used to edit profile info.
+
+{% endcomment %}
