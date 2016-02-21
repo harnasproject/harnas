@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'harnas.contest',
     'harnas.checker',
     'harnas.userprofile',
+    'harnas.customregistration',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -114,5 +115,8 @@ AUTHENTICATION_BACKENDS = AUTHENTICATION_BACKENDS + (
     'guardian.backends.ObjectPermissionBackend',
 )
 
-# user profile module
+# custom user profile module
 AUTH_PROFILE_MODULE = 'userprofile.UserProfile'
+
+# custom registration form
+REGISTRATION_FORM = 'harnas.customregistration.forms.RegistrationForm'
