@@ -12,9 +12,13 @@ class RegistrationForm(RegistrationFormUniqueEmail):
     Custom registration form that adds fields used in user profile.
     """
 
-    date_of_birth = forms.DateField(initial=now)
-    organization = forms.ChoiceField(choices=UserProfile.ORGANIZATION_CHOICES,
-                                     initial='H')
+    date_of_birth = forms.DateField(
+        initial=now
+    )
+    organization = forms.ChoiceField(
+        choices=UserProfile.ORGANIZATION_CHOICES,
+        initial='H'
+    )
 
 
     class Meta:
