@@ -1,2 +1,9 @@
 #!/usr/bin/python3
 import argparse
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(help='Runs the user program.')
+    parser.add_argument('--memlimit')
+    parser.add_argument('--timelimit')
+    parser.add_argument('--user')
+    parser.add_argument('--status-fd')
