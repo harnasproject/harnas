@@ -11,6 +11,7 @@ import time
 import signal
 import ctypes
 from ctypes.util import find_library
+import json
 
 libc = ctypes.CDLL(find_library('c'))
 cgroup_path = '/sys/fs/cgroup'
@@ -146,8 +147,11 @@ def child(cg_path, ns):
 
     os.execvp(ns.command[0], ns.command)
 
-def alarm():
-    raise TimeoutError()
+timeout_enable = True
+
+def alarm(*_):
+    if timeout_enable:
+        raise TimeoutError()
 
 def kill_cg(path):
     timeout = 0.01
@@ -163,13 +167,15 @@ def kill_cg(path):
         timeout *= 2
 
 def main(ns):
+    global timeout_enable
+
     cg_name = 'harnas-sandbox-' + binascii.hexlify(os.urandom(8)).decode()
     cg_path = cgroup_path + '/memory/' + cg_name
     os.mkdir(cg_path)
 
     if ns.memlimit is not None:
-        with open(cg_path + '/memory.limit_in_bytes') as f:
-            f.write(ns.memlimit * 1024 * 1024)
+        with open(cg_path + '/memory.limit_in_bytes', 'w') as f:
+            f.write(str(int(ns.memlimit * 1024 * 1024)))
 
     start = time.time()
     pid = os.fork()
@@ -177,32 +183,43 @@ def main(ns):
         child(cg_path, ns)
     else:
         signal.signal(signal.SIGALRM, alarm)
-        signal.alarm(ns.timelimit)
+        signal.setitimer(signal.ITIMER_REAL, ns.timelimit)
         error_dict = {'status': 'OK'}
         try:
             _, code = os.waitpid(pid, 0)
             if code != 0:
                 error_dict['status'] = 'EXITCODE'
+            timeout_enable = False
         except TimeoutError:
             error_dict['status'] = 'TLE'
 
         error_dict['time'] = time.time() - start
 
     kill_cg(cg_path)
+    had_oom = open(cg_path + '/memory.failcnt').read().strip() != '0'
+    if had_oom:
+        error_dict['status'] = 'MEM'
+
     os.rmdir(cg_path)
+
+    if ns.status_fd:
+        with  os.fdopen(ns.status_fd, 'w') as f:
+            f.write(json.dumps(error_dict) + '\n')
 
     if error_dict['status'] == 'OK':
         sys.exit(0)
     else:
+        if not ns.status_fd and error_dict['status'] != 'EXITCODE':
+            print('harnas-sandbox: process failed with status %s' % error_dict['status'], file=sys.stderr)
         sys.exit(1)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run a command with limited capabilities as well as time and memory.')
-    parser.add_argument('--memlimit', type=int, help='limit memory usage (in MiB)')
+    parser.add_argument('--memlimit', type=float, help='limit memory usage (in MiB)')
     parser.add_argument('--timelimit', type=float, help='limit execution time (in seconds)', default=120)
     parser.add_argument('--system', help='don\'t drop privs', action='store_true', default=False)
-    parser.add_argument('--status-fd', type=int, help='instead of displaying error message when limits are exceeded, write short JSON report (keys: status (TLE, MEM) and time) to this fd')
+    parser.add_argument('--status-fd', type=int, help='instead of displaying error message when limits are exceeded, write short JSON report (keys: status (OK, TLE, MEM) and time) to this fd')
     parser.add_argument('--non-strict', help='allow all system calls - that means that there may be some information leakage between tests', action='store_true', default=False)
     parser.add_argument('--allow-fork', help='allow fork in strict mode', action='store_true', default=False)
 
