@@ -1,4 +1,68 @@
 #!/usr/bin/python3
 import argparse
+import itertools
+import sys
+import re
 
-parser = argparse.ArgumentParser(help='An advanced generic diff utility.')
+parser = argparse.ArgumentParser(description='An advanced generic diff utility.')
+parser.add_argument('--compare-floats', help='If a number in expected output looks like float, compare it with precisions', action='store_true', default=False)
+parser.add_argument('--abs-error', default=1e-5, type=float, help='Maximum allowed absolute error for --compare-floats')
+parser.add_argument('--rel-error', default=1e-5, type=float, help='Maximum allowed relative error for --compare-floats')
+parser.add_argument('--whitespace', help='Don\'t ignore whitespace (not allowed with --compare-floats)', action='store_true', default=False)
+parser.add_argument('expected', help='User program output file.')
+parser.add_argument('output', help='Expected output file.')
+parser.add_argument('input', nargs='?', help='The input file (ignored)')
+ns = parser.parse_args()
+
+exp = open(ns.expected, 'r')
+out = open(ns.output, 'r')
+
+float_regexp = re.compile('[+-]?[0-9]*\.[0-9]+')
+
+def compare_floats(a, b):
+    return abs(a - b) <= ns.abs_error or abs(a - b) <= max(abs(a), abs(b)) * ns.rel_error
+
+for expline, outline in itertools.zip_longest(exp, out):
+    if expline == outline:
+        continue
+
+    if outline is None or expline is None:
+        break
+
+    if ns.whitespace:
+        break
+
+    expsplit = expline.split()
+    outsplit = outline.split()
+
+    if expsplit == outsplit:
+        continue
+
+    if not ns.compare_floats:
+        break
+
+    if len(expsplit) != len(outsplit):
+        break
+
+    ok = True
+    for expitem, outitem in zip(expsplit, outsplit):
+        if expitem == outitem:
+            continue
+        if not float_regexp.match(expitem):
+            ok = False
+            break
+
+        try:
+            if not compare_floats(float(expitem), float(outitem)):
+                ok = False
+                break
+        except ValueError:
+            ok = False
+            break
+
+    if not ok:
+        break
+else:
+    sys.exit(0)
+
+sys.exit(1)
