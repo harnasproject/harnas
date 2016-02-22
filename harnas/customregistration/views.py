@@ -14,11 +14,12 @@ def login_override(request):
     """
     response = login(
         request,
-        template_name='custom_login.html'
+        template_name='login.html'
     )
     # Base login method returns HttpResponseRedirect upon successful login
     if request.method == 'POST' and isinstance(response, HttpResponseRedirect):
-        messages.add_message(request, messages.SUCCESS, _('You are now logged in.'))
+        messages.add_message(request, messages.SUCCESS,
+                             _('You are now logged in.'))
     return response
 
 
@@ -28,10 +29,32 @@ def logout_override(request, next_page=None):
     """
     response = logout(request, next_page)
     if not isinstance(response, HttpResponseRedirect):
-        messages.add_message(request, messages.SUCCESS, _('You have been logged out.'))
+        messages.add_message(request, messages.SUCCESS,
+                             _('You have been logged out.'))
         return HttpResponseRedirect(reverse('homepage'))
     else:
         return response
+
+
+def password_reset_override(request):
+    response = password_reset(
+        request,
+        template_name='password_reset_form.html',
+        email_template_name='password_reset_email.html',
+        post_reset_redirect=reverse('homepage')
+    )
+    if request.method == 'POST':
+        messages.add_message(request, messages.INFO, _(
+            'Email with instructions on how to reset your password has been '
+            'sent.'))
+    return response
+
+
+def password_reset_confirm_override(request, uidb64=None, token=None):
+    return password_reset_confirm(
+        request, uidb64, token,
+        template_name='password_reset_confirm.html'
+    )
 
 
 def password_reset_done_override(request):
@@ -44,6 +67,13 @@ def password_reset_complete_override(request):
     messages.add_message(request, messages.SUCCESS,
                          _('Your password has been reset. You can log in.'))
     return HttpResponseRedirect(reverse('auth_login'))
+
+
+def password_change_override(request):
+    return password_change(
+        request,
+        template_name='password_change_form.html'
+    )
 
 
 def password_change_done_override(request):

@@ -7,3 +7,4 @@ harnas.db
 htmlcov/
 .coverage
 .vagrant/
+static
