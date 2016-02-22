@@ -145,6 +145,7 @@ def child(cg_path, ns):
     if not ns.non_strict:
         strict_mode(ns)
 
+    os.closerange(4, 1024)
     os.execvp(ns.command[0], ns.command)
 
 timeout_enable = True
@@ -180,7 +181,10 @@ def main(ns):
     start = time.time()
     pid = os.fork()
     if pid == 0:
-        child(cg_path, ns)
+        try:
+            child(cg_path, ns)
+        finally:
+            os._exit(1)
     else:
         signal.signal(signal.SIGALRM, alarm)
         signal.setitimer(signal.ITIMER_REAL, ns.timelimit)
@@ -203,7 +207,7 @@ def main(ns):
     os.rmdir(cg_path)
 
     if ns.status_fd:
-        with  os.fdopen(ns.status_fd, 'w') as f:
+        with os.fdopen(ns.status_fd, 'w') as f:
             f.write(json.dumps(error_dict) + '\n')
 
     if error_dict['status'] == 'OK':

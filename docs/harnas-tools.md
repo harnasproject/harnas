@@ -9,5 +9,4 @@ Harnaś invokes tools from image when checking tasks:
 With standard Harnaś images there is a set scripts called 'haranas-tools' provided. Example usage:
 
 * init: `harnas-compile --allowed-languages=c,cpp,pascal $(solutiondir)`.
-* run: `harnas-run --memlimit 256M --timelimit 2 --input $(testname).in --answer $(testname).out --checker harnas-diff -c--compare-floats`
-
+* run: `harnas-run --memlimit 256 --timelimit 2 --input $(testname).in --expected $(testname).out --checker harnas-diff -c--compare-floats`

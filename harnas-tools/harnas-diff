@@ -26,8 +26,8 @@ for expline, outline in itertools.zip_longest(exp, out):
     if expline == outline:
         continue
 
-    if outline is None or expline is None:
-        break
+    if outline is None: outline = ''
+    if expline is None: expline = ''
 
     if ns.whitespace:
         break
