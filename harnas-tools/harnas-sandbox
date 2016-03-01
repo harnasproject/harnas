@@ -1,11 +1,234 @@
 #!/usr/bin/python3
-import argparse
+import sys
+sys.path.append('/opt/harnas-tools')
 
+import argparse
+from seccomp import ALLOW, SyscallFilter, ERRNO, Arg, MASKED_EQ
+import os
+import binascii
+import errno
+import time
+import signal
+import ctypes
+from ctypes.util import find_library
+import json
+
+libc = ctypes.CDLL(find_library('c'))
+cgroup_path = '/sys/fs/cgroup'
+PR_SET_NO_NEW_PRIVS = 36
+
+def strict_mode(ns):
+    if libc.prctl(PR_SET_NO_NEW_PRIVS, 0, 0, 0, 0) < 0:
+        raise OSError('prctl(PR_GET_NO_NEW_PRIVS) failed')
+
+    f = SyscallFilter(defaction=ERRNO(errno.EACCES))
+    maskval = os.O_RDONLY
+    mask = os.O_RDONLY | os.O_RDWR | os.O_WRONLY | os.O_CREAT | os.O_TMPFILE | os.O_TRUNC
+    f.add_rule(ALLOW, "open",
+               Arg(1, MASKED_EQ, mask, maskval))
+    f.add_rule(ALLOW, "openat",
+               Arg(2, MASKED_EQ, mask, maskval))
+    f.add_rule(ALLOW, "write")
+    f.add_rule(ALLOW, "writev")
+    f.add_rule(ALLOW, "read")
+    f.add_rule(ALLOW, "readv")
+    f.add_rule(ALLOW, "readdir")
+    f.add_rule(ALLOW, "mmap")
+    f.add_rule(ALLOW, "mmap2")
+    f.add_rule(ALLOW, "move_pages")
+    f.add_rule(ALLOW, "munmap")
+    f.add_rule(ALLOW, "msync")
+    f.add_rule(ALLOW, "munlock")
+    f.add_rule(ALLOW, "munlockall")
+    f.add_rule(ALLOW, "arch_prctl")
+    f.add_rule(ALLOW, "close")
+    f.add_rule(ALLOW, "fstat")
+    f.add_rule(ALLOW, "lstat")
+    f.add_rule(ALLOW, "lstat64")
+    f.add_rule(ALLOW, "stat")
+    f.add_rule(ALLOW, "stat64")
+    f.add_rule(ALLOW, "readlink")
+    f.add_rule(ALLOW, "readlinkat")
+    f.add_rule(ALLOW, "exit_group")
+    f.add_rule(ALLOW, "rt_sigaction")
+    f.add_rule(ALLOW, "rt_sigpending")
+    f.add_rule(ALLOW, "rt_sigprocmask")
+    f.add_rule(ALLOW, "rt_sigqueueinfo")
+    f.add_rule(ALLOW, "rt_sigreturn")
+    f.add_rule(ALLOW, "rt_sigsuspend")
+    f.add_rule(ALLOW, "rt_sigtimedwait")
+    f.add_rule(ALLOW, "rt_tgsigqueueinfo")
+    f.add_rule(ALLOW, "brk")
+    f.add_rule(ALLOW, "mprotect")
+    f.add_rule(ALLOW, "access")
+    f.add_rule(ALLOW, "futex")
+    f.add_rule(ALLOW, "clock_getres")
+    f.add_rule(ALLOW, "clock_gettime")
+    f.add_rule(ALLOW, "clock_nanosleep")
+    f.add_rule(ALLOW, "dup")
+    f.add_rule(ALLOW, "dup2")
+    f.add_rule(ALLOW, "dup3")
+    f.add_rule(ALLOW, "epoll_create")
+    f.add_rule(ALLOW, "epoll_create1")
+    f.add_rule(ALLOW, "epoll_ctl")
+    f.add_rule(ALLOW, "epoll_pwait")
+    f.add_rule(ALLOW, "epoll_wait")
+    f.add_rule(ALLOW, "eventfd")
+    f.add_rule(ALLOW, "eventfd2")
+    f.add_rule(ALLOW, "fchdir")
+    f.add_rule(ALLOW, "fdatasync")
+    f.add_rule(ALLOW, "fsync")
+    f.add_rule(ALLOW, "futex")
+    f.add_rule(ALLOW, "get_robust_list")
+    f.add_rule(ALLOW, "get_thread_area")
+    f.add_rule(ALLOW, "getcpu")
+    f.add_rule(ALLOW, "getcwd")
+    f.add_rule(ALLOW, "getdents")
+    f.add_rule(ALLOW, "getdents64")
+    f.add_rule(ALLOW, "getegid")
+    # f.add_rule(ALLOW, "getegid64") ?
+    f.add_rule(ALLOW, "geteuid")
+    # f.add_rule(ALLOW, "geteuid64") ?
+    f.add_rule(ALLOW, "getgid")
+    # f.add_rule(ALLOW, "getgid64") ?
+    f.add_rule(ALLOW, "getgroups")
+    # f.add_rule(ALLOW, "getgroups64")
+    f.add_rule(ALLOW, "getpgid")
+    f.add_rule(ALLOW, "getpgrp")
+    f.add_rule(ALLOW, "getpid")
+    f.add_rule(ALLOW, "getppid")
+    f.add_rule(ALLOW, "getpriority")
+    f.add_rule(ALLOW, "getrandom")
+    f.add_rule(ALLOW, "getresgid")
+    f.add_rule(ALLOW, "getresuid")
+    f.add_rule(ALLOW, "getresgid32")
+    f.add_rule(ALLOW, "getresuid32")
+    f.add_rule(ALLOW, "getrlimit")
+    f.add_rule(ALLOW, "getrusage")
+    f.add_rule(ALLOW, "getsid")
+    f.add_rule(ALLOW, "gettimeofday")
+    f.add_rule(ALLOW, "getuid")
+    f.add_rule(ALLOW, "getuid32")
+    f.add_rule(ALLOW, "pipe")
+    f.add_rule(ALLOW, "pipe2")
+    f.add_rule(ALLOW, "pread64")
+    f.add_rule(ALLOW, "preadv")
+    f.add_rule(ALLOW, "pwrite64")
+    f.add_rule(ALLOW, "pwritev")
+    f.add_rule(ALLOW, "sched_yield")
+    f.add_rule(ALLOW, "sched_getattr")
+    f.add_rule(ALLOW, "select")
+    f.add_rule(ALLOW, "setpgid")
+    f.add_rule(ALLOW, "signal")
+    f.add_rule(ALLOW, "signalfd")
+    f.add_rule(ALLOW, "signalfd4")
+    f.add_rule(ALLOW, "sigpending")
+    f.add_rule(ALLOW, "sigprocmask")
+    f.add_rule(ALLOW, "sigreturn")
+    f.add_rule(ALLOW, "sigsuspend")
+    f.add_rule(ALLOW, "execve")
+    if ns.allow_fork:
+        f.add_rule(ALLOW, "fork")
+        f.add_rule(ALLOW, "vfork")
+        f.add_rule(ALLOW, "clone")
+    f.load()
+
+def child(cg_path, ns):
+    with open(cg_path + '/tasks', 'w') as f:
+        f.write(str(os.getpid()) + '\n')
+
+    if not ns.system:
+        os.setgroups([])
+        os.setgid(10000)
+        os.setuid(10000)
+
+    if not ns.non_strict:
+        strict_mode(ns)
+
+    os.closerange(4, 1024)
+    os.execvp(ns.command[0], ns.command)
+
+timeout_enable = True
+
+def alarm(*_):
+    if timeout_enable:
+        raise TimeoutError()
+
+def kill_cg(path):
+    timeout = 0.01
+    while True:
+        pids = list(map(int, open(path + '/tasks').read().split()))
+        for pid in pids:
+            os.kill(pid, signal.SIGKILL)
+
+        if not pids:
+            break
+
+        time.sleep(timeout)
+        timeout *= 2
+
+def main(ns):
+    global timeout_enable
+
+    cg_name = 'harnas-sandbox-' + binascii.hexlify(os.urandom(8)).decode()
+    cg_path = cgroup_path + '/memory/' + cg_name
+    os.mkdir(cg_path)
+
+    if ns.memlimit is not None:
+        with open(cg_path + '/memory.limit_in_bytes', 'w') as f:
+            f.write(str(int(ns.memlimit * 1024 * 1024)))
+
+    start = time.time()
+    pid = os.fork()
+    if pid == 0:
+        try:
+            child(cg_path, ns)
+        finally:
+            os._exit(1)
+    else:
+        signal.signal(signal.SIGALRM, alarm)
+        signal.setitimer(signal.ITIMER_REAL, ns.timelimit)
+        error_dict = {'status': 'OK'}
+        try:
+            _, code = os.waitpid(pid, 0)
+            if code != 0:
+                error_dict['status'] = 'EXITCODE'
+            timeout_enable = False
+        except TimeoutError:
+            error_dict['status'] = 'TLE'
+
+        error_dict['time'] = time.time() - start
+
+    kill_cg(cg_path)
+    had_oom = open(cg_path + '/memory.failcnt').read().strip() != '0'
+    if had_oom:
+        error_dict['status'] = 'MEM'
+
+    os.rmdir(cg_path)
+
+    if ns.status_fd:
+        with os.fdopen(ns.status_fd, 'w') as f:
+            f.write(json.dumps(error_dict) + '\n')
+
+    if error_dict['status'] == 'OK':
+        sys.exit(0)
+    else:
+        if not ns.status_fd and error_dict['status'] != 'EXITCODE':
+            print('harnas-sandbox: process failed with status %s' % error_dict['status'], file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(help='Run a command with limited capabilities as well as time and memory.')
-    parser.add_argument('--memlimit', help='limit memory usage')
-    parser.add_argument('--timelimit', help='limit execution time')
-    parser.add_argument('--user', help='switch user')
-    parser.add_argument('--status-fd', type=int, help='instead of displaying error message when limits are exceeded, write short info (TLE, MEM) to this fd')
+    parser = argparse.ArgumentParser(description='Run a command with limited capabilities as well as time and memory.')
+    parser.add_argument('--memlimit', type=float, help='limit memory usage (in MiB)')
+    parser.add_argument('--timelimit', type=float, help='limit execution time (in seconds)', default=120)
+    parser.add_argument('--system', help='don\'t drop privs', action='store_true', default=False)
+    parser.add_argument('--status-fd', type=int, help='instead of displaying error message when limits are exceeded, write short JSON report (keys: status (OK, TLE, MEM) and time) to this fd')
+    parser.add_argument('--non-strict', help='allow all system calls - that means that there may be some information leakage between tests', action='store_true', default=False)
+    parser.add_argument('--allow-fork', help='allow fork in strict mode', action='store_true', default=False)
+
+    parser.add_argument('command', nargs='+', help='a command to execute')
+
+    ns = parser.parse_args()
+
+    main(ns)

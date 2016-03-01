@@ -1,0 +1,3 @@
+[submodule "harnas-tools/libseccomp"]
+	path = harnas-tools/libseccomp
+	url = https://github.com/seccomp/libseccomp

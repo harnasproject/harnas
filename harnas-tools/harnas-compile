@@ -1,10 +1,53 @@
 #!/usr/bin/python3
 import argparse
+import shlex
+import os
+import subprocess
+import sys
+from functools import partial
+
+def clike(compiler, *, directory, filename, output):
+    command = shlex.split(compiler)
+    exec_command(command + [filename, '-I', directory, '-o', output])
+
+def exec_command(command):
+    prefix = ['harnas-sandbox', '--non-strict']
+    if ns.system:
+        prefix.append('--system')
+    exit = subprocess.call(prefix + ['--'] + command)
+    if exit != 0:
+        sys.exit('compilation failed')
 
 languages = {
-    '': '',
+    'c': partial(clike, 'gcc -std=c99'),
+    'c++14': partial(clike, 'g++ -std=c++14'),
 }
 
+extmap = [
+    ('c++14', ['cpp', 'c++', 'cxx']),
+    ('c', ['c']),
+]
+
+def find_file_and_lang(directory, allowed_languages):
+    for filename in sorted(os.listdir(directory)):
+        for lang, exts in extmap:
+            if lang not in allowed_languages: continue
+            for ext in exts:
+                if filename.endswith('.' + ext):
+                    return directory + '/' + filename, lang
+
+    return None, None
+
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(help='Compile the user program.')
-    parser.add_arguments
+    parser = argparse.ArgumentParser(description='Compile the user program.')
+    parser.add_argument('--allowed-languages', help='command separated allowed languages', default=','.join(sorted(languages.keys())))
+    parser.add_argument('--system', help='compile system code (without sandbox)')
+    parser.add_argument('--output', '-o', help='where to write the launcher script', default='/test/runsolution')
+    parser.add_argument('dir')
+    ns = parser.parse_args()
+
+    filename, lang_name = find_file_and_lang(ns.dir, ns.allowed_languages.split(','))
+    if not filename:
+        sys.exit('no suitable file found (enabled languages: %s)' % ns.allowed_languages)
+
+    languages[lang_name](directory=ns.dir, output=ns.output, filename=filename)

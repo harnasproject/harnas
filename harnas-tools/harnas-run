@@ -1,2 +1,52 @@
 #!/usr/bin/python3
 import argparse
+import subprocess
+import os
+import binascii
+import json
+import sys
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Runs the user program.')
+    parser.add_argument('--memlimit', help='Memory limit in megabytes')
+    parser.add_argument('--timelimit', help='Time limit in seconds')
+    parser.add_argument('--non-strict', help='Run sandbox in non-strict mode.', action='store_true', default=False)
+    parser.add_argument('--checker', '-c', nargs='+', help='Diff utility', default='harnas-diff')
+    parser.add_argument('--input', help='Program input', required=True)
+    parser.add_argument('--expected', help='Expected output', required=True)
+    parser.add_argument('--solution', help='Solution path', default='/test/runsolution')
+    # TODO:
+    # - build checker with "harnas-compile --script --system"
+    # - --generator option (also build with harnas-compile)
+
+    ns = parser.parse_args()
+
+    cmd = ['harnas-sandbox']
+    if ns.non_strict:
+        cmd.append('--non-strict')
+    if ns.timelimit:
+        cmd.append('--timelimit', ns.timelimit)
+    if ns.memlimit:
+        cmd.append('--memlimit', ns.memlimit)
+
+    run_id = binascii.hexlify(os.urandom(16)).decode()
+    out_file = 'out_' + run_id + '.out'
+    status_file = 'status_' + run_id + '.status'
+
+    status_fd = os.open(status_file, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    out_fd = os.open(out_file, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    cmd += ['--status-fd', str(status_fd)]
+    cmd += ['--', ns.solution]
+
+    exit_code = subprocess.call(cmd, stdin=open(ns.input, 'rb'), stdout=out_fd, stderr=open('/dev/null', 'w'), pass_fds=[status_fd])
+    os.close(status_fd)
+    os.close(out_fd)
+
+    status = json.loads(open(status_file, 'r').read())
+    os.unlink(status_file)
+    ok = subprocess.call([ns.checker, ns.expected, out_file], stdout=sys.stderr)
+    os.unlink(out_file)
+    if ok != 0:
+        status['status'] = 'ANS'
+
+    print(json.dumps(status))
