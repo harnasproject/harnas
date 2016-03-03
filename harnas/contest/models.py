@@ -1,7 +1,5 @@
-from django import forms
 from django.contrib.auth.models import User
 from django.db import models
-from django.forms import ModelForm
 from harnas.checker.models import TestEnvironment
 
 
@@ -23,13 +21,6 @@ class Contest(models.Model):
         return self.name
 
 
-class ContestForm(ModelForm):
-
-    class Meta:
-        model = Contest
-        fields = ['name', 'description']
-
-
 class News(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField()
@@ -43,13 +34,6 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class NewsForm(ModelForm):
-
-    class Meta:
-        model = News
-        fields = ['title', 'description']
 
 
 class Task(models.Model):
@@ -69,13 +53,6 @@ class Task(models.Model):
         return self.name
 
 
-class TaskForm(ModelForm):
-
-    class Meta:
-        model = Task
-        fields = ['name', 'short_name', 'description', 'test_environment']
-
-
 class TestCase(models.Model):
     task = models.ForeignKey(Task)
     max_memory = models.PositiveIntegerField()
@@ -84,15 +61,3 @@ class TestCase(models.Model):
     executor = models.CharField(max_length=500)
     in_file_path = models.CharField(max_length=500)
     out_file_path = models.CharField(max_length=500)
-
-
-class TestCaseForm(ModelForm):
-
-    class Meta:
-        model = TestCase
-        fields = ['task', 'max_memory', 'max_duration', 'comparator',
-                  'executor', 'comparator', 'in_file_path', 'out_file_path']
-
-
-class UploadFileForm(forms.Form):
-    file = forms.FileField(label="Upload new file")

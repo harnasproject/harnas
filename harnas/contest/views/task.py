@@ -8,7 +8,8 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods, require_safe
 from guardian.shortcuts import assign_perm
 from guardian.shortcuts import get_objects_for_user
-from harnas.contest.models import Task, TaskForm, UploadFileForm
+from harnas.contest.models import Task
+from harnas.contest.forms import TaskForm, UploadFileForm
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 
