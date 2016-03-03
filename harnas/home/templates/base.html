@@ -81,6 +81,10 @@
             <ul class="dropdown-menu">
               <li><a href="{% url 'account_profile' user.pk %}">View profile</a></li>
               <li><a href="{% url 'account_settings' %}">Settings</a></li>
+              {% if user.is_superuser %}
+                <li class="divider"></li>
+                <li><a href="{% url 'admin:index' %}">Admin</a></li>
+              {% endif %}
               <li class="divider"></li>
               <li><a href="{% url 'auth_logout' %}">Log out</a></li>
             </ul>
@@ -91,8 +95,8 @@
       </div>
     </div>
   </nav>
-  {% bootstrap_messages %}
   <div id="content" class="container">
+    {% bootstrap_messages %}
     {% block content %}
     {% endblock %}
   </div>
