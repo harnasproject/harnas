@@ -18,6 +18,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Application definition
 
 INSTALLED_APPS = (
+    # harnas.home and harnas.customregistration needs to be
+    # at top to allow correct template overriding
+    'harnas.home',
+    'harnas.customregistration',
     'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -32,11 +36,10 @@ INSTALLED_APPS = (
     'crispy_forms',
     'guardian',
     'django_extensions',
-    'harnas.home',
     'harnas.contest',
     'harnas.checker',
     'harnas.userprofile',
-    'harnas.customregistration',
+
 )
 
 MIDDLEWARE_CLASSES = (
