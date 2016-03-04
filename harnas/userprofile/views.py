@@ -8,7 +8,6 @@ from django.template import RequestContext
 from django.views.decorators.http import require_safe
 
 from harnas.userprofile.forms import UserFieldsForm, UserProfileEditForm
-from harnas.userprofile.utils import gravatar_for_user
 
 
 @require_safe
@@ -25,7 +24,6 @@ def show(request, user_id):
         'profile': user.userprofile,
         'age': today.year - born.year - (
             (today.month, today.day) < (born.month, born.day)),
-        'gravatar': gravatar_for_user(user)
     })
 
 

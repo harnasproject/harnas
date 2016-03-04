@@ -2,6 +2,11 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.utils import timezone
+from hashlib import md5
+from urllib.parse import urlencode
+from django.contrib.sites.models import Site
+
+from harnas import settings
 
 
 class UserProfile(models.Model):
@@ -55,6 +60,22 @@ class UserProfile(models.Model):
             return self.user.first_name + " " + self.user.last_name
         else:
             return self.user.username
+
+    @property
+    def gravatar(self, size=200):
+        default = 'default_gravatar_male' if self.sex == 'M' \
+            else 'default_gravatar_female'
+
+        return "http://www.gravatar.com/avatar/%s?%s" % (
+            md5(self.user.email.lower().encode()).hexdigest(),
+            urlencode({
+                's': str(size),
+                'd': 'http://%s%s%s' %
+                # EXPERIMENTAL !!! need to be tested in production
+                     (Site.objects.get_current(), settings.STATIC_URL, default)
+            })
+        )
+
 
 
 def create_user_profile(sender, instance, created, **kwargs):
