@@ -8,3 +8,4 @@ htmlcov/
 .coverage
 .vagrant/
 static
+harnas.sublime-project

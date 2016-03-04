@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
+
 from harnas.contest.models import TestCase, Task, News, Contest
 
 
