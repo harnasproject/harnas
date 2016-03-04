@@ -1,5 +1,3 @@
-from datetime import date
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -14,16 +12,12 @@ from harnas.userprofile.forms import UserFieldsForm, UserProfileEditForm
 @login_required
 def show(request, user_id):
     """
-    :return: profile of a user specified by user_id.
+    :return: profile page of a user specified by user_id.
     """
     user = get_object_or_404(User, pk=user_id)
-    today = date.today()
-    born = user.userprofile.date_of_birth
     return render(request, 'profile.html', {
         'user': user,
-        'profile': user.userprofile,
-        'age': today.year - born.year - (
-            (today.month, today.day) < (born.month, born.day)),
+        'profile': user.userprofile
     })
 
 

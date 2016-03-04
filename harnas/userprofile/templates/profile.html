@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-sm-12 col-md-4" id="profile_data_small_container">
             <ul class="list-unstyled">
-                <li id="gravatar"><img src="{{ user.userprofile.gravatar }}"></li>
+                <li id="gravatar"><img src="{{ profile.gravatar }}"></li>
                 {% if profile.show_email %}
                 <li class="profile_data_sml">
                     <span class="glyphicon glyphicon-envelope"></span>
@@ -22,7 +22,7 @@
                     <span class="glyphicon glyphicon-education"></span>
                     {{ profile.get_organization_display }}
                 </li>
-                <li class="profile_data_sml">{{ age }} years old</li>
+                <li class="profile_data_sml">{{ profile.age }} years old</li>
             </ul>
         </div>
         <div class="col-sm-12 col-md-8" id="profile_dashboard_container">
@@ -35,6 +35,6 @@
 
 {% comment %}
 
-Page displaying user's profile data.
+Page displaying user profile data.
 
 {% endcomment %}
