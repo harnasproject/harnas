@@ -6,7 +6,8 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.text import slugify
 from django.views.decorators.http import require_http_methods, require_safe
 from guardian.decorators import permission_required
-from harnas.contest.models import Contest, NewsForm, News
+from harnas.contest.models import Contest, News
+from harnas.contest.forms import NewsForm
 
 @require_http_methods(['GET', 'POST'])
 def new(request, id):
