@@ -48,6 +48,14 @@ class UserProfile(models.Model):
           default=True
     )
 
+    @property
+    def display_name(self):
+        if (self.user.first_name is not None and self.user.first_name.strip() != "") or \
+                (self.user.last_name is not None and self.user.last_name.strip() != ""):
+            return self.user.first_name + " " + self.user.last_name
+        else:
+            return self.user.username
+
 
 def create_user_profile(sender, instance, created, **kwargs):
     """
