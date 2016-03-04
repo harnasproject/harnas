@@ -1,3 +1,4 @@
+from datetime import date
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.timezone import now
@@ -23,3 +24,17 @@ class RegistrationForm(RegistrationFormUniqueEmail):
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name', UsernameField())
+
+    def clean(self):
+        cleaned_data = super(RegistrationForm, self).clean()
+        date_of_birth = cleaned_data.get("date_of_birth")
+
+        today = date.today()
+        delta = today.year - date_of_birth.year - (
+            (today.month, today.day) < (date_of_birth.month, date_of_birth.day))
+
+        if delta < 10:
+            raise forms.ValidationError("You need to be at least 10 years old to use this website.")
+
+        if delta > 110:
+            raise forms.ValidationError("Provided date of birth is invalid.")
