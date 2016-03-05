@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load guardian_tags %}
 {% load crispy_forms_tags %}
 {% load pandoc_convert %}
@@ -21,31 +22,33 @@
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation">
                 <a href="#description" aria-controls="description" role="tab" data-toggle="tab">
-                    Description
+                    {% trans 'Description' %}
                 </a>
             </li>
             <li role="presentation" class="active">
                 <a href="#news" aria-controls="news" role="tab" data-toggle="tab">
-                    News
+                    {% trans 'News' %}
                 </a>
             </li>
             <li role="presentation">
                 <a href="#tasks" aria-controls="tasks" role="tab" data-toggle="tab">
-                    Tasks
+                    {% trans 'Tasks' %}
                 </a>
             </li>
             <li role="presentation">
-                <a href="" aria-controls="" role="tab" data-toggle="tab"></a>
+                <a href="#groups" aria-controls="groups" role="tab" data-toggle="tab">
+                    {% trans 'Groups' %}
+                </a>
             </li>
             {% if 'manage_contest' in contest_perms %}
             <li role="presentation">
                 <a href="#participants" aria-controls="participants" role="tab" data-toggle="tab">
-                    Participants
+                    {% trans 'Participants' %}
                 </a>
             </li>
             <li role="presentation">
                 <a href="#edit" aria-controls="edit" role="tab" data-toggle="tab">
-                    Edit
+                    {% trans 'Edit' %}
                 </a>
             </li>
             {% endif %}
@@ -82,6 +85,7 @@
                 {% endfor %}
                 {% if 'manage_contest' in contest_perms %}
                     <tr><td>
+                        <h4>Add new: </h4>
                         <form action="{% url 'news_add' contest.pk %}" method="post">
                             {% csrf_token %}
                             {{ news_form|crispy }}
@@ -105,7 +109,19 @@
                 {% endfor %}
             </table>
         </div>
-        <div class="tab-pane" role="tabpanel" id=""></div>
+        <div class="tab-pane" role="tabpanel" id="groups">
+            <table class="table table-striped">
+                    <tr>
+                        <th>Group id</th>
+                    </tr>
+                    {% for group in groups %}
+                    <tr>
+                        <td>{{ group }}</td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+        </div>
         {% if 'manage_contest' in contest_perms %}
         <div class="tab-pane" role="tabpanel" id="participants">
                 <table class="table table-striped">
