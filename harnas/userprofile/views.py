@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -35,6 +36,7 @@ def edit(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+            messages.add_message(request, messages.SUCCESS, "Your settings has been changed.")
             return HttpResponseRedirect('/accounts/' + str(user.id))
         else:
             return render_to_response(
