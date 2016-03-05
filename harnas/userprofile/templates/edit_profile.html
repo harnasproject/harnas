@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h3>{{ user.username }} {% trans 'settings' %}</h3>
+<h3>{{ user.username }} {% trans 'settings' %}:</h3>
 
 <form method="POST" action="">
     {% csrf_token %}
@@ -15,7 +15,7 @@
         <input class="btn btn-default" type="submit" value="{% trans 'Submit' %}"/>
     </fieldset>
 </form>
-<a href="{% url 'auth_password_change' %}">Change your password</a>
+<a href="{% url 'auth_password_change' %}">{% trans 'Change your password' %}</a>
 
 {% endblock %}
 
