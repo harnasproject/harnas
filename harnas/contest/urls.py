@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from harnas.contest.views import contest, task, news
+from harnas.contest.views import contest, task, news, groups
 
 urlpatterns = [
     url(r'^contest/$', contest.index, name='contest_index'),
@@ -13,7 +13,8 @@ urlpatterns = [
     url(r'^task/(?P<id>\d+)/upload_file/$', task.upload_file, name='task_upload_file'),
     url(r'^task/(?P<id>\d+)/download_file/$', task.download_file, name='task_download_file'),
     url(r'^task/(?P<id>\d+)/delete_file/$', task.delete_file, name='task_delete_file'),
-    url(r'^contest/(?P<id>\d+)/news/new', news.new, name='news_add'),
-    url(r'^news/delete/(?P<id>\d+)', news.delete, name='news_delete'),
-    url(r'^news/edit/(?P<id>\d+)', news.edit, name='news_edit'),
+    url(r'^contest/(?P<id>\d+)/news/new/$', news.new, name='news_add'),
+    url(r'^news/delete/(?P<id>\d+)/$', news.delete, name='news_delete'),
+    url(r'^news/edit/(?P<id>\d+)/$', news.edit, name='news_edit'),
+    url(r'^groups/new/(?P<contest_id>\d+)/$', groups.new, name='groups_new'),
 ]

@@ -7,9 +7,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.text import slugify
 from django.views.decorators.http import require_http_methods, require_safe
-from guardian.shortcuts import assign_perm, get_users_with_perms
+from guardian.shortcuts import assign_perm, get_users_with_perms, get_groups_with_perms
 from harnas.contest.models import Contest
-from harnas.contest.forms import ContestForm, NewsForm
+from harnas.contest.forms import ContestForm, NewsForm, GroupForm
 
 
 @require_safe
@@ -23,7 +23,10 @@ def details(request, id):
     contest = Contest.objects.get(pk=id)
     if not request.user.has_perm('contest.view_contest', contest):
         raise PermissionDenied
-    form = ContestForm(instance=contest)
+    contest_form = ContestForm(instance=contest)
+    groups = get_groups_with_perms(contest, attach_perms=True)
+    groups = [k for k, v in groups.items() if 'view_contest' in v]
+    group_form = GroupForm()
     news = contest.news_set.all().order_by('-created_at')
     news_form = NewsForm()
     if request.user.has_perm('contest.manage_contest', contest):
@@ -34,7 +37,9 @@ def details(request, id):
         participants = []
     return render(request, 'contest/contest_details.html',
                   { 'contest': contest,
-                    'form': form,
+                    'contest_form': contest_form,
+                    'groups': groups,
+                    'group_form': group_form,
                     'participants': participants,
                     'news_form': news_form,
                     'news': news })

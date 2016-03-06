@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import ModelForm
+from django.contrib.auth.models import Group
 
 
 from harnas.contest.models import TestCase, Task, News, Contest
@@ -32,3 +33,9 @@ class ContestForm(ModelForm):
     class Meta:
         model = Contest
         fields = ['name', 'description']
+
+
+class GroupForm(ModelForm):
+    class Meta:
+        model = Group
+        fields = ['name']

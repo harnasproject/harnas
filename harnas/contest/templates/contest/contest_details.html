@@ -111,16 +111,23 @@
         </div>
         <div class="tab-pane" role="tabpanel" id="groups">
             <table class="table table-striped">
-                    <tr>
-                        <th>Group id</th>
-                    </tr>
-                    {% for group in groups %}
-                    <tr>
-                        <td>{{ group }}</td>
-                        <td></td>
-                    </tr>
-                    {% endfor %}
-                </table>
+                <tr>
+                    <th>Group id</th>
+                    <th>Group name</th>
+                </tr>
+                {% for group in groups %}
+                <tr>
+                    <td>#{{ group.pk }}</td>
+                    <td>{{ group.name }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <h4>Add new:</h4>
+            <form action="{% url 'groups_new' contest.pk %}" method="post">
+                    {% csrf_token %}
+                    {{ group_form|crispy }}
+                    <input type="submit" value="Add" class="btn btn-default">
+            </form>
         </div>
         {% if 'manage_contest' in contest_perms %}
         <div class="tab-pane" role="tabpanel" id="participants">
@@ -140,7 +147,7 @@
         <div class="tab-pane" role="tabpanel" id="edit">
             <form action="{% url 'contest_edit' contest.pk %}" method="post">
                 {% csrf_token %}
-                {{ form|crispy }}
+                {{ contest_form|crispy }}
                 <input type="submit" value="Submit" class="btn btn-default">
             </form>
         </div>
