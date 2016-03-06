@@ -1,13 +1,18 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import Group
+from django.views.decorators.http import require_POST
 from guardian.shortcuts import assign_perm
 
 from harnas.contest.models import Contest
 from harnas.contest.forms import GroupForm
 
 
+@login_required
+@require_POST
 def new(request, contest_id):
     contest = Contest.objects.get(pk=contest_id)
     group_form = GroupForm(request.POST)
@@ -21,5 +26,24 @@ def new(request, contest_id):
                                  'New group %s for contest %s has been created.' % (group.name, contest.name))
         else:
             messages.add_message(request, messages.ERROR, 'Group with that name already exists.')
+
+    return HttpResponseRedirect(reverse('contest_details', args=[contest_id]))
+
+
+@login_required
+def edit(request, contest_id, group_id):
+    return HttpResponseRedirect('#')
+
+
+@login_required
+def delete(request, contest_id, group_id):
+    if request.user.has_perm('manage_contest', Contest.objects.get(pk=contest_id)):
+        try:
+            Group.objects.get(pk=group_id).delete()
+            messages.add_message(request, messages.SUCCESS, "Group has been successfully deleted.")
+        except ObjectDoesNotExist:
+            messages.add_message(request, messages.ERROR, "Group does not exists.")
+    else:
+        messages.add_message(request, messages.ERROR, "You cannot do that.")
 
     return HttpResponseRedirect(reverse('contest_details', args=[contest_id]))
