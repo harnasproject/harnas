@@ -4,7 +4,7 @@ from harnas.checker.models import TestEnvironment
 
 
 class Contest(models.Model):
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=250, unique=True, null=False)
     slug = models.SlugField()
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
