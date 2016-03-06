@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
 <div class="container">
@@ -15,7 +16,7 @@
                 {% if profile.personal_page %}
                 <li class="profile_data_sml">
                     <span class="glyphicon glyphicon-home"></span>
-                    <a href="{{ profile.personal_page }}" target="_blank">{$ trans 'Personal page' %}</a>
+                    <a href="{{ profile.personal_page }}" target="_blank">{% trans 'Personal page' %}</a>
                 </li>
                 {% endif %}
                 <li class="profile_data_sml">
