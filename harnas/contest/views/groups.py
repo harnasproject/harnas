@@ -15,19 +15,22 @@ from harnas.contest.forms import GroupForm
 @require_POST
 def new(request, contest_id):
     contest = Contest.objects.get(pk=contest_id)
-    group_form = GroupForm(request.POST)
+    if request.user.has_perm('manage_contest', contest):
+        group_form = GroupForm(request.POST)
 
-    if group_form.is_valid():
-        group, created = Group.objects.get_or_create(name=contest.name + "_" + group_form.cleaned_data['name'])
-        if created:
-            assign_perm('view_contest', group, contest)
-            group.save()
-            messages.add_message(request, messages.SUCCESS,
-                                 'New group %s for contest %s has been created.' % (group.name, contest.name))
-        else:
-            messages.add_message(request, messages.ERROR, 'Group with that name already exists.')
+        if group_form.is_valid():
+            group, created = Group.objects.get_or_create(name=contest.name + "_" + group_form.cleaned_data['name'])
+            if created:
+                assign_perm('view_contest', group, contest)
+                group.save()
+                messages.add_message(request, messages.SUCCESS,
+                                     'New group %s for contest %s has been created.' % (group.name, contest.name))
+            else:
+                messages.add_message(request, messages.ERROR, 'Group with that name already exists.')
+    else:
+        messages.add_message(request, messages.ERROR, 'You cannot do that.')
 
-    return HttpResponseRedirect(reverse('contest_details', args=[contest_id]))
+    return HttpResponseRedirect(reverse('contest_details', args=[contest_id, 'groups']))
 
 
 @login_required
@@ -46,4 +49,4 @@ def delete(request, contest_id, group_id):
     else:
         messages.add_message(request, messages.ERROR, "You cannot do that.")
 
-    return HttpResponseRedirect(reverse('contest_details', args=[contest_id]))
+    return HttpResponseRedirect(reverse('contest_details', args=[contest_id, 'groups']))

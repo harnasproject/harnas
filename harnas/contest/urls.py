@@ -4,6 +4,7 @@ from harnas.contest.views import contest, task, news, groups
 urlpatterns = [
     url(r'^contest/$', contest.index, name='contest_index'),
     url(r'^contest/(?P<id>\d+)/$', contest.details, name='contest_details'),
+    url(r'^contest/(?P<id>\d+)/(?P<tab>\w+)/$', contest.details, name='contest_details'),
     url(r'^contest/(?P<contest_id>\d+)/groups/new/$', groups.new, name='group_new'),
     url(r'^contest/(?P<contest_id>\d+)/groups/(?P<group_id>\d+)/edit/$', groups.edit, name='group_edit'),
     url(r'^contest/(?P<contest_id>\d+)/groups/(?P<group_id>\d+)/delete/$', groups.delete, name='group_delete'),

@@ -19,7 +19,7 @@ def index(request):
 
 @require_safe
 @login_required
-def details(request, id):
+def details(request, id, tab='news'):
     contest = Contest.objects.get(pk=id)
     if not request.user.has_perm('contest.view_contest', contest):
         raise PermissionDenied
@@ -42,7 +42,8 @@ def details(request, id):
                     'group_form': group_form,
                     'participants': participants,
                     'news_form': news_form,
-                    'news': news })
+                    'news': news,
+                    'tab': tab} )
 
 
 @require_http_methods(['GET', 'POST'])
