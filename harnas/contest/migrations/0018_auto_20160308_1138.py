@@ -1,20 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+from django.db import models, migrations
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contest', '0018_taskedition_contest'),
+        ('contest', '0017_auto_20160305_1618'),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='taskedition',
-            name='contest',
-        ),
         migrations.RemoveField(
             model_name='taskedition',
             name='parent',
@@ -26,12 +22,17 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='task',
             name='contest',
-            field=models.ForeignKey(null=True, default=None, to='contest.Contest'),
+            field=models.ForeignKey(default=None, null=True, to='contest.Contest'),
         ),
         migrations.AddField(
             model_name='task',
             name='parent',
-            field=models.ForeignKey(null=True, default=None, to='contest.Task'),
+            field=models.ForeignKey(default=None, null=True, to='contest.Task'),
+        ),
+        migrations.AlterField(
+            model_name='contest',
+            name='name',
+            field=models.CharField(unique=True, max_length=250),
         ),
         migrations.DeleteModel(
             name='TaskEdition',
