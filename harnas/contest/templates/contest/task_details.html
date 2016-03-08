@@ -10,7 +10,7 @@
     {% get_obj_perms request.user for task as "task_perms" %}
     <div class="page_header">
         <div class="pull-left">
-            <h1>[{{ task.short_name }}] {{ task.name }} </h1>
+            <h1>[{{ task.short_name }}] {{ task.display_name }} </h1>
         </div>
         <div class="pull-right">
             <h1>
@@ -64,8 +64,8 @@
                     {% for file in task_files %}
                     <tr>
                         <td>{{ file }}</td>
-                        <td><a href='{% url 'task_download_file' task.pk  %}?filename={{ file }}' class="btn btn-default">Download</a></td>
-                        <td><a href='{% url 'task_delete_file' task.pk %}?filename={{ file }}' class="btn btn-default">Delete</a></td>
+                        <td><a href="{% url 'task_download_file' task.pk  %}?filename={{ file }}" class="btn btn-default">Download</a></td>
+                        <td><a href="{% url 'task_delete_file' task.pk %}?filename={{ file }}" class="btn btn-default">Delete</a></td>
                     </tr>
                     {% endfor %}
                 </table>

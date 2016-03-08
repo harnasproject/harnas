@@ -8,6 +8,6 @@
     <form action="{{ form_post }}" method="post">
         {% csrf_token %}
         {{ form|crispy }}
-        <input type="submit" value="Submit" class="btn btn-default">
+        <input type="submit" value="Add" class="btn btn-default">
     </form>
 {% endblock %}
