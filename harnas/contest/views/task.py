@@ -114,6 +114,7 @@ def download_file(request, id):
     response['Content-Disposition'] = 'attachment; filename="%s"' % file.name
     return response
 
+
 @require_safe
 @login_required
 def delete_file(request, id):

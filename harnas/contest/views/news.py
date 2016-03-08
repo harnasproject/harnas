@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -17,7 +18,8 @@ def new(request, id):
             contest=contest,
             author=request.user
             )
-    return HttpResponseRedirect(reverse('contest_details', args=[id]))
+        messages.add_message(request, messages.SUCCESS, "New news has been created.")
+    return HttpResponseRedirect(reverse('contest_details', args=[id, 'news']))
 
 
 @require_safe

@@ -1,4 +1,5 @@
 from copy import deepcopy
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
@@ -7,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.text import slugify
-from django.views.decorators.http import require_http_methods, require_safe
+from django.views.decorators.http import require_http_methods, require_safe, require_POST
 from guardian.shortcuts import get_groups_with_perms
 from harnas.contest.forms import GroupForm
 from guardian.shortcuts import assign_perm, get_users_with_perms
@@ -50,6 +51,7 @@ def details(request, id, tab='news'):
                     'news_form': news_form,
                     'fetch_task_form': fetch_task_form,
                     'tasks': tasks,
+                    'tab': tab,
                     })
 
 
@@ -60,12 +62,14 @@ def edit(request, id=None):
         contest = Contest.objects.get(pk=id)
         form_post = reverse('contest_edit', args=[id])
         if not request.user.has_perm('contest.manage_contest', contest):
-            raise PermissionDenied
+            messages.add_message(request, messages.ERROR, "You cannot do that.")
+            return HttpResponseRedirect('/')
     else:
         contest = Contest()
         form_post = reverse('contest_new')
         if not request.user.has_perm('contest.add_contest'):
-            raise PermissionDenied
+            messages.add_message(request, messages.ERROR, "You cannot do that.")
+            return HttpResponseRedirect('/')
     if request.method == 'POST':
         form = ContestForm(request.POST, instance=contest)
     else:
@@ -81,26 +85,32 @@ def edit(request, id=None):
         cache_key = make_template_fragment_key('contest_description',
                                                [new_contest.pk])
         cache.delete(cache_key)
+        messages.add_message(request, messages.SUCCESS, "New contest has been successfully created.")
         return HttpResponseRedirect(reverse('contest_details',
                                             args=[new_contest.pk]))
+
     return render(request, 'contest/contest_new.html',
                   { 'form': form,
                     'form_post': form_post })
 
 
-@require_http_methods(['POST'])
+@require_POST
 @login_required
 def fetch_task(request, id):
-    if not request.user.has_perm('contest.manage_contest'):
-        raise PermissionDenied
+    contest = Contest.objects.get(pk=id)
+    if not request.user.has_perm('manage_contest', contest):
+        messages.add_message(request, messages.ERROR, "You cannot do that.")
     if request.method == 'POST':
         form = TaskFetchForm(request.POST)
         if form.is_valid():
             parent_task = form.cleaned_data['task']
             fetched_task = deepcopy(parent_task)
             fetched_task.pk = None
-            fetched_task.contest = Contest.objects.get(pk=id)
+            fetched_task.contest = contest
             fetched_task.parent = parent_task
             fetched_task.save()
+            messages.add_message(request, messages.SUCCESS, "New task has been added to contest %s."
+                                 % contest.name)
+
     return HttpResponseRedirect(reverse('contest_details',
-                                        args=[id]))
+                                        args=[id, 'tasks']))
