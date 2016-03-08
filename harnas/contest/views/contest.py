@@ -1,3 +1,4 @@
+from copy import deepcopy
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
@@ -7,9 +8,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.text import slugify
 from django.views.decorators.http import require_http_methods, require_safe
-from guardian.shortcuts import assign_perm, get_users_with_perms, get_groups_with_perms
-from harnas.contest.models import Contest
-from harnas.contest.forms import ContestForm, NewsForm, GroupForm, AttachTaskForm
+from guardian.shortcuts import get_groups_with_perms
+from harnas.contest.forms import GroupForm
+from guardian.shortcuts import assign_perm, get_users_with_perms
+from harnas.contest.models import Contest, Task
+from harnas.contest.forms import ContestForm, NewsForm, TaskFetchForm
 
 
 @require_safe
@@ -27,25 +30,27 @@ def details(request, id, tab='news'):
     groups = get_groups_with_perms(contest, attach_perms=True)
     groups = [k for k, v in groups.items() if 'view_contest' in v]
     group_form = GroupForm()
-    task_attach_form = AttachTaskForm()
     news = contest.news_set.all().order_by('-created_at')
     news_form = NewsForm()
+    fetch_task_form = TaskFetchForm()
     if request.user.has_perm('contest.manage_contest', contest):
         participants = get_users_with_perms(contest, attach_perms=True)
         participants = [k for k, v in participants.items()
                         if 'participate_in_contest' in v]
     else:
         participants = []
+    tasks = Task.objects.filter(contest=contest)
     return render(request, 'contest/contest_details.html',
                   { 'contest': contest,
                     'contest_form': contest_form,
                     'groups': groups,
                     'group_form': group_form,
                     'participants': participants,
-                    'task_attach_form': task_attach_form,
                     'news': news,
                     'news_form': news_form,
-                    'tab': tab} )
+                    'fetch_task_form': fetch_task_form,
+                    'tasks': tasks,
+                    })
 
 
 @require_http_methods(['GET', 'POST'])
@@ -81,3 +86,21 @@ def edit(request, id=None):
     return render(request, 'contest/contest_new.html',
                   { 'form': form,
                     'form_post': form_post })
+
+
+@require_http_methods(['POST'])
+@login_required
+def fetch_task(request, id):
+    if not request.user.has_perm('contest.manage_contest'):
+        raise PermissionDenied
+    if request.method == 'POST':
+        form = TaskFetchForm(request.POST)
+        if form.is_valid():
+            parent_task = form.cleaned_data['task']
+            fetched_task = deepcopy(parent_task)
+            fetched_task.pk = None
+            fetched_task.contest = Contest.objects.get(pk=id)
+            fetched_task.parent = parent_task
+            fetched_task.save()
+    return HttpResponseRedirect(reverse('contest_details',
+                                        args=[id]))

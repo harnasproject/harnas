@@ -1,6 +1,13 @@
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from harnas.checker.models import TestEnvironment
+from harnas.contest import helpers
+
+
+import os
 
 
 class Contest(models.Model):
@@ -42,6 +49,8 @@ class Task(models.Model):
     description = models.TextField()
     test_environment = models.ForeignKey(TestEnvironment)
     author = models.ForeignKey(User)
+    parent = models.ForeignKey('self', null=True, default=None)
+    contest = models.ForeignKey(Contest, null=True, default=None)
 
     class Meta:
         permissions = (
@@ -51,6 +60,20 @@ class Task(models.Model):
 
     def __str__(self):
         return self.name
+
+
+@receiver(post_save,
+          sender=Task,
+          dispatch_uid="make_directory_for_task_files")
+def make_directory_for_task_files(sender, instance, **kwargs):
+    if kwargs['created']:
+        task_dir = os.path.join(settings.TASK_STORAGE_PREFIX, str(instance.pk))
+        if instance.parent:
+            parent_dir = os.path.join(settings.TASK_STORAGE_PREFIX,
+                                      str(instance.parent.pk))
+            helpers.copy_directory(parent_dir, task_dir)
+        else:
+            os.mkdir(task_dir)
 
 
 class TestCase(models.Model):

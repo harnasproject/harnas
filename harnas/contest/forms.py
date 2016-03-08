@@ -23,10 +23,6 @@ class TaskForm(ModelForm):
         fields = ['name', 'short_name', 'description', 'test_environment']
 
 
-class AttachTaskForm(Form):
-    task = forms.ModelChoiceField(Task.objects.all())
-
-
 class NewsForm(ModelForm):
     class Meta:
         model = News
@@ -43,3 +39,9 @@ class GroupForm(ModelForm):
     class Meta:
         model = Group
         fields = ['name']
+
+
+class TaskFetchForm(forms.Form):
+    task = forms.ModelChoiceField(queryset=Task.objects.filter(parent=None),
+                                  empty_label=None)
+
