@@ -5,6 +5,8 @@ urlpatterns = [
     url(r'^contest/$', contest.index, name='contest_index'),
     url(r'^contest/new/$', contest.edit, name='contest_new'),
     url(r'^contest/(?P<id>\d+)/$', contest.details, name='contest_details'),
+    # contest_fetch_task must be before contest_details with tabs
+    url(r'^contest/(?P<id>\d+)/fetch_task/$', contest.fetch_task, name='contest_fetch_task'),
     url(r'^contest/(?P<id>\d+)/(?P<tab>\w+)/$', contest.details, name='contest_details'),
     url(r'^contest/(?P<id>\d+)/edit/$', contest.edit, name='contest_edit'),
     url(r'^contest/(?P<contest_id>\d+)/groups/new/$', groups.new, name='group_new'),
@@ -20,5 +22,4 @@ urlpatterns = [
     url(r'^contest/(?P<id>\d+)/news/new/$', news.new, name='news_add'),
     url(r'^news/delete/(?P<id>\d+)/$', news.delete, name='news_delete'),
     url(r'^news/edit/(?P<id>\d+)/$', news.edit, name='news_edit'),
-    url(r'^contest/(?P<id>\d+)/fetch_task/$', contest.fetch_task, name='contest_fetch_task'),
 ]
