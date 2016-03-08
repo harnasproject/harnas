@@ -21,23 +21,31 @@ def new(request, contest_id):
         group_form = GroupForm(request.POST)
 
         if group_form.is_valid():
-            group, created = Group.objects.get_or_create(name=contest.name + "_" + group_form.cleaned_data['name'])
+            group_name = contest.name + "_" + group_form.cleaned_data['name']
+            group, created = Group.objects.get_or_create(name=group_name)
             if created:
                 assign_perm('view_contest', group, contest)
                 group.save()
 
                 for task in Task.objects.filter(contest=contest_id):
-                    GroupTaskDetails.objects.create(task=task, group=group, open=task.now,
-                                                    deadline=task.deadline, close=task.close)
-
-                messages.add_message(request, messages.SUCCESS,
-                                     'New group %s for contest %s has been created.' % (group.name, contest.name))
+                    GroupTaskDetails.objects.create(task=task,
+                                                    group=group,
+                                                    open=task.open,
+                                                    deadline=task.deadline,
+                                                    close=task.close)
+                success_msg = 'New group %s for contest %s has been created.' % (group.name, contest.name)
+                messages.add_message(request,
+                                     messages.SUCCESS,
+                                     success_msg)
             else:
-                messages.add_message(request, messages.ERROR, 'Group with that name already exists.')
+                messages.add_message(request,
+                                     messages.ERROR,
+                                     'Group with that name already exists.')
     else:
         messages.add_message(request, messages.ERROR, 'You cannot do that.')
 
-    return HttpResponseRedirect(reverse('contest_details', args=[contest_id, 'groups']))
+    return HttpResponseRedirect(reverse('contest_details',
+                                        args=[contest_id, 'groups']))
 
 
 @login_required
