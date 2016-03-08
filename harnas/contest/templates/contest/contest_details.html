@@ -96,13 +96,6 @@
             </table>
         </div>
         <div class="tab-pane {% if tab == 'tasks' %} active {% endif %}" role="tabpanel" id="tasks">
-        {% if 'manage_contest' in contest_perms %}
-            <form action="{% url 'contest_fetch_task' contest.pk %}" method="post">
-                {% csrf_token %}
-                {{ fetch_task_form|crispy }}
-                <input type="submit" value="Fetch" class="btn btn-default">
-            </form>
-        {% endif %}
             <table class="table table-striped">
                 <tr>
                     <th>Short name</th>
@@ -115,6 +108,14 @@
                 </tr>
                 {% endfor %}
             </table>
+            {% if 'manage_contest' in contest_perms %}
+            <h4>Fetch new:</h4>
+            <form action="{% url 'contest_fetch_task' contest.pk %}" method="post">
+                {% csrf_token %}
+                {{ fetch_task_form|crispy }}
+                <input type="submit" value="Fetch" class="btn btn-default">
+            </form>
+            {% endif %}
         </div>
         <div class="tab-pane {% if tab == 'groups' %} active {% endif %}" role="tabpanel" id="groups">
             <table class="table table-striped">
@@ -128,11 +129,11 @@
                 {% for group in groups %}
                 <tr>
                     <td>#{{ group.pk }}</td>
-                    <td>{{ group.name }}</td>
+                    <td><a href="{% url 'group_edit' contest.pk group.pk %}">{{ group.name }}</a></td>
                     {% if 'manage_contest' in contest_perms %}
                         <td class="text-right">
-                            <a href="{% url 'group_edit' contest.pk group.pk%}" class="btn btn-default btn-xs"> Edit</a>
-                            <a href="{% url 'group_delete' contest.pk group.pk%}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure?')" > Delete</a>
+                            <a href="{% url 'group_edit' contest.pk group.pk %}" class="btn btn-default btn-xs"> Edit</a>
+                            <a href="{% url 'group_delete' contest.pk group.pk %}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure?')" > Delete</a>
                         </td>
                     {% endif %}
                 </tr>
