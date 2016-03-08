@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
@@ -52,6 +52,10 @@ class Task(models.Model):
     parent = models.ForeignKey('self', null=True, default=None)
     contest = models.ForeignKey(Contest, null=True, default=None)
 
+    open = models.DateTimeField(null=True, default=None)
+    deadline = models.DateTimeField(null=True, default=None)
+    close = models.DateTimeField(null=True, default=None)
+
     class Meta:
         permissions = (
             ('view_task', 'Can view task'),
@@ -91,3 +95,15 @@ class TestCase(models.Model):
     executor = models.CharField(max_length=500)
     in_file_path = models.CharField(max_length=500)
     out_file_path = models.CharField(max_length=500)
+
+
+class GroupTaskDetails(models.Model):
+    group = models.ForeignKey(Group, null=False)
+    task = models.ForeignKey(Task, null=False)
+
+    open = models.DateTimeField()
+    deadline = models.DateTimeField()
+    close = models.DateTimeField()
+
+    class Meta:
+        index_together = ['group', 'task']

@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -8,7 +9,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from guardian.shortcuts import assign_perm
 
-from harnas.contest.models import Contest
+from harnas.contest.models import Contest, GroupTaskDetails, Task
 from harnas.contest.forms import GroupForm
 
 
@@ -24,6 +25,11 @@ def new(request, contest_id):
             if created:
                 assign_perm('view_contest', group, contest)
                 group.save()
+
+                for task in Task.objects.filter(contest=contest_id):
+                    GroupTaskDetails.objects.create(task=task, group=group, open=task.now,
+                                                    deadline=task.deadline, close=task.close)
+
                 messages.add_message(request, messages.SUCCESS,
                                      'New group %s for contest %s has been created.' % (group.name, contest.name))
             else:
@@ -36,8 +42,10 @@ def new(request, contest_id):
 
 @login_required
 def edit(request, contest_id, group_id):
+    group = Group.objects.get(pk=group_id)
     return render(request, 'contest/group_edit.html', {
-        'group': Group.objects.get(pk=group_id)
+        'group': group,
+        'tasks_details': GroupTaskDetails.objects.filter(group=group_id)
     })
 
 

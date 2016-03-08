@@ -5,5 +5,23 @@
     {{ block.super }} | Edit group
 {% endblock %}
 {% block content %}
-    <h2>Group {{ group.name }}</h2>
+    <h2>{{ group.name }}</h2>
+
+    <table class="table table-striped">
+        <tr>
+            <th>Task</th>
+            <th>Open</th>
+            <th>Deadline</th>
+            <th>Close</th>
+        </tr>
+        {% for task_details in tasks_details %}
+        <tr>
+            <td>{{ task_details.task.display_name }}</td>
+            <td>{{ task_details.open }}</td>
+            <td>{{ task_details.deadline }}</td>
+            <td>{{ task_details.close }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
 {% endblock %}

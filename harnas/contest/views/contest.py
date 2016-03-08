@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from copy import deepcopy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -12,7 +14,7 @@ from django.views.decorators.http import require_http_methods, require_safe, req
 from guardian.shortcuts import get_groups_with_perms
 from harnas.contest.forms import GroupForm
 from guardian.shortcuts import assign_perm, get_users_with_perms
-from harnas.contest.models import Contest, Task
+from harnas.contest.models import Contest, Task, GroupTaskDetails
 from harnas.contest.forms import ContestForm, NewsForm, TaskFetchForm
 
 
@@ -108,9 +110,17 @@ def fetch_task(request, id):
             fetched_task.pk = None
             fetched_task.contest = contest
             fetched_task.parent = parent_task
+            fetched_task.open = form.cleaned_data['open']
+            fetched_task.deadline = form.cleaned_data['deadline']
+            fetched_task.close = form.cleaned_data['close']
             fetched_task.save()
             messages.add_message(request, messages.SUCCESS, "New task has been added to contest %s."
                                  % contest.name)
+            # add tasks to groups
+            for group in get_groups_with_perms(contest, attach_perms=True):
+                GroupTaskDetails.objects.create(task=fetched_task, group=group,
+                                                open=fetched_task.open, deadline=fetched_task.deadline,
+                                                close=fetched_task.close)
 
     return HttpResponseRedirect(reverse('contest_details',
                                         args=[id, 'tasks']))
