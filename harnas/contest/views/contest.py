@@ -9,7 +9,7 @@ from django.utils.text import slugify
 from django.views.decorators.http import require_http_methods, require_safe
 from guardian.shortcuts import assign_perm, get_users_with_perms, get_groups_with_perms
 from harnas.contest.models import Contest
-from harnas.contest.forms import ContestForm, NewsForm, GroupForm
+from harnas.contest.forms import ContestForm, NewsForm, GroupForm, AttachTaskForm
 
 
 @require_safe
@@ -27,6 +27,7 @@ def details(request, id, tab='news'):
     groups = get_groups_with_perms(contest, attach_perms=True)
     groups = [k for k, v in groups.items() if 'view_contest' in v]
     group_form = GroupForm()
+    task_attach_form = AttachTaskForm()
     news = contest.news_set.all().order_by('-created_at')
     news_form = NewsForm()
     if request.user.has_perm('contest.manage_contest', contest):
@@ -41,8 +42,9 @@ def details(request, id, tab='news'):
                     'groups': groups,
                     'group_form': group_form,
                     'participants': participants,
-                    'news_form': news_form,
+                    'task_attach_form': task_attach_form,
                     'news': news,
+                    'news_form': news_form,
                     'tab': tab} )
 
 

@@ -20,6 +20,10 @@ class RegistrationForm(RegistrationFormUniqueEmail):
         choices=UserProfile.ORGANIZATION_CHOICES,
         initial='H'
     )
+    sex = forms.ChoiceField(
+        choices=UserProfile.SEX_CHOICES,
+        initial='M'
+    )
 
     class Meta:
         model = User

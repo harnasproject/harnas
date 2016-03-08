@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import Group
+from django.shortcuts import render
 from django.views.decorators.http import require_POST
 from guardian.shortcuts import assign_perm
 
@@ -35,7 +36,9 @@ def new(request, contest_id):
 
 @login_required
 def edit(request, contest_id, group_id):
-    return HttpResponseRedirect('#')
+    return render(request, 'contest/group_edit.html', {
+        'group': Group.objects.get(pk=group_id)
+    })
 
 
 @login_required

@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm
+from django.forms import Form, ModelForm
 from django.contrib.auth.models import Group
 
 
@@ -21,6 +21,10 @@ class TaskForm(ModelForm):
     class Meta:
         model = Task
         fields = ['name', 'short_name', 'description', 'test_environment']
+
+
+class AttachTaskForm(Form):
+    task = forms.ModelChoiceField(Task.objects.all())
 
 
 class NewsForm(ModelForm):

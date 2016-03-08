@@ -14,7 +14,7 @@
             <h1>{{ contest.name }}</h1>
         </div>
         <div class="pull-right">
-            <h1><span class="small">{{ contest.creator }}</span></h1>
+            <h1><span class="small">{{ contest.creator.userprofile.display_name }}</span></h1>
         </div>
         <div class="clearfix"></div>
     </div>
@@ -108,6 +108,14 @@
                 </tr>
                 {% endfor %}
             </table>
+            {% if 'manage_contest' in contest_perms %}
+                <h4>Attach new:</h4>
+                <form action="/" method="post">
+                    {% csrf_token %}
+                    {{ task_attach_form|crispy }}
+                    <input type="submit" value="Add" class="btn btn-default">
+                </form>
+            {% endif %}
         </div>
         <div class="tab-pane {% if tab == 'groups' %} active {% endif %}" role="tabpanel" id="groups">
             <table class="table table-striped">
@@ -131,12 +139,14 @@
                 </tr>
                 {% endfor %}
             </table>
-            <h4>Add new:</h4>
-            <form action="{% url 'group_new' contest.pk %}" method="post">
-                    {% csrf_token %}
-                    {{ group_form|crispy }}
-                    <input type="submit" value="Add" class="btn btn-default">
-            </form>
+            {% if 'manage_contest' in contest_perms %}
+                <h4>Add new:</h4>
+                <form action="{% url 'group_new' contest.pk %}" method="post">
+                        {% csrf_token %}
+                        {{ group_form|crispy }}
+                        <input type="submit" value="Add" class="btn btn-default">
+                </form>
+            {% endif %}
         </div>
         {% if 'manage_contest' in contest_perms %}
         <div class="tab-pane {% if tab == 'participants' %} active {% endif %}" role="tabpanel" id="participants">

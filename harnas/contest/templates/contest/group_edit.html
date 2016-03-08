@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block title %}
+    {{ block.super }} | Edit group
+{% endblock %}
+{% block content %}
+    <h2>Group {{ group.name }}</h2>
+{% endblock %}
