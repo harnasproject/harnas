@@ -61,6 +61,13 @@ class Task(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def display_name(self):
+        if self.contest is not None and self.contest.name.strip() != "":
+            return "%s (%s)" % (self.name, self.contest.name)
+        else:
+            return self.name
+
 
 @receiver(post_save,
           sender=Task,
