@@ -92,6 +92,13 @@
             </table>
         </div>
         <div class="tab-pane" role="tabpanel" id="tasks">
+        {% if 'manage_contest' in contest_perms %}
+            <form action="{% url 'contest_fetch_task' contest.pk %}" method="post">
+                {% csrf_token %}
+                {{ fetch_task_form|crispy }}
+                <input type="submit" value="Fetch" class="btn btn-default">
+            </form>
+        {% endif %}
             <table class="table table-striped">
                 <tr>
                     <th>Short name</th>
@@ -99,8 +106,8 @@
                 </tr>
                 {% for task in tasks %}
                 <tr>
-                    <td>task.short_name</td>
-                    <td>task.name</td>
+                    <td>{{ task.short_name }}</td>
+                    <td><a href="{% url 'task_details' task.pk %}">{{ task.name }}</a></td>
                 </tr>
                 {% endfor %}
             </table>

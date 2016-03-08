@@ -32,3 +32,8 @@ class ContestForm(ModelForm):
     class Meta:
         model = Contest
         fields = ['name', 'description']
+
+
+class TaskFetchForm(forms.Form):
+    task = forms.ModelChoiceField(queryset=Task.objects.filter(parent=None),
+                                  empty_label=None)

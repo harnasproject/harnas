@@ -28,7 +28,7 @@ def index(request):
         not is_contest_manager
     ):
         raise PermissionDenied
-    tasks = Task.objects.all()
+    tasks = Task.objects.filter(parent=None)
     return render(request, 'contest/task_index.html', {'tasks': tasks})
 
 

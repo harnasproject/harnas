@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^contest/(?P<id>\d+)/news/new', news.new, name='news_add'),
     url(r'^news/delete/(?P<id>\d+)', news.delete, name='news_delete'),
     url(r'^news/edit/(?P<id>\d+)', news.edit, name='news_edit'),
+    url(r'^contest/(?P<id>\d+)/fetch_task/$', contest.fetch_task, name='contest_fetch_task'),
 ]
