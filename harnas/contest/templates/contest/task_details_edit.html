@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block title %}
+    {{ block.super }} | Edit task details
+{% endblock %}
+{% block content %}
+    <h3>Edit timestamps for task: {{ task.display_name }}</h3>
+    <form action="{% url 'contest_task_details_edit' contest_id group_id task.pk %}" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="Submit" class="btn btn-default">
+    </form>
+{% endblock %}

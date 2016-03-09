@@ -62,14 +62,14 @@
         </div>
         <div class="tab-pane {% if tab == 'news' %} active {% endif %}" role="tabpanel" id="news">
             <table class = "table .table-hover" >
-                {% for news in contest.news_set.all %}
+                {% for news in news_set %}
                     <tr><td>
                         <table style="width: 100%">
                             <tr>
                                 <td class="text-right">
                                     {% if 'manage_contest' in contest_perms %}
-                                        <a href="{% url 'news_edit' news.pk%}" class="btn btn-default btn-xs"> Edit</a>
-                                        <a href="{% url 'news_delete' news.pk%}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure?')" > Delete</a>
+                                        <a href="{% url 'contest_news_edit' contest.pk news.pk %}" class="btn btn-default btn-xs"> Edit</a>
+                                        <a href="{% url 'contest_news_delete' contest.pk news.pk %}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure?')" > Delete</a>
                                     {% endif %}
                                     <em> {{ news.created_at }}</em>
                                 </td>
@@ -86,7 +86,7 @@
                 {% if 'manage_contest' in contest_perms %}
                     <tr><td>
                         <h4>Add new: </h4>
-                        <form action="{% url 'news_add' contest.pk %}" method="post">
+                        <form action="{% url 'contest_news_new' contest.pk %}" method="post">
                             {% csrf_token %}
                             {{ news_form|crispy }}
                             <input type="submit" value="Submit" class="btn btn-default">
@@ -129,11 +129,11 @@
                 {% for group in groups %}
                 <tr>
                     <td>#{{ group.pk }}</td>
-                    <td><a href="{% url 'group_edit' contest.pk group.pk %}">{{ group.name }}</a></td>
+                    <td><a href="{% url 'contest_group_edit' contest.pk group.pk %}">{{ group.name }}</a></td>
                     {% if 'manage_contest' in contest_perms %}
                         <td class="text-right">
-                            <a href="{% url 'group_edit' contest.pk group.pk %}" class="btn btn-default btn-xs"> Edit</a>
-                            <a href="{% url 'group_delete' contest.pk group.pk %}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure?')" > Delete</a>
+                            <a href="{% url 'contest_group_edit' contest.pk group.pk %}" class="btn btn-default btn-xs"> Edit</a>
+                            <a href="{% url 'contest_group_delete' contest.pk group.pk %}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure?')" > Delete</a>
                         </td>
                     {% endif %}
                 </tr>
@@ -141,7 +141,7 @@
             </table>
             {% if 'manage_contest' in contest_perms %}
                 <h4>Add new:</h4>
-                <form action="{% url 'group_new' contest.pk %}" method="post">
+                <form action="{% url 'contest_group_new' contest.pk %}" method="post">
                         {% csrf_token %}
                         {{ group_form|crispy }}
                         <input type="submit" value="Add" class="btn btn-default">

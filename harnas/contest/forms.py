@@ -4,7 +4,7 @@ from django.forms import ModelForm, Form
 from django.contrib.auth.models import Group
 
 
-from harnas.contest.models import TestCase, Task, News, Contest
+from harnas.contest.models import TestCase, Task, News, Contest, GroupTaskDetails
 
 
 class TestCaseForm(ModelForm):
@@ -40,6 +40,12 @@ class GroupForm(ModelForm):
     class Meta:
         model = Group
         fields = ['name']
+
+
+class TaskDetailsForm(ModelForm):
+    class Meta:
+        model = GroupTaskDetails
+        fields = ['open', 'deadline', 'close']
 
 
 class TaskFetchForm(Form):

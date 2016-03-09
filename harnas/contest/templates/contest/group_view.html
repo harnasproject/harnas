@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load crispy_forms_tags %}
+{% load guardian_tags %}
 {% block title %}
     {{ block.super }} | Edit group
 {% endblock %}
 {% block content %}
+    {% get_obj_perms request.user for contest as "contest_perms" %}
     <h2>{{ group.name }}</h2>
 
     <table class="table table-striped">
@@ -13,6 +15,9 @@
             <th>Open</th>
             <th>Deadline</th>
             <th>Close</th>
+            {% if 'manage_contest' in contest_perms %}
+                <th>Manage</th>
+            {% endif %}
         </tr>
         {% for task_details in tasks_details %}
         <tr>
@@ -20,6 +25,9 @@
             <td>{{ task_details.open }}</td>
             <td>{{ task_details.deadline }}</td>
             <td>{{ task_details.close }}</td>
+            {% if 'manage_contest' in contest_perms %}
+            <td><a href="{% url 'contest_task_details_edit' contest.pk group.pk task_details.task.pk %}">Edit</a></td>
+            {% endif %}
         </tr>
         {% endfor %}
     </table>
