@@ -95,10 +95,11 @@ def edit(request, id=None):
         cache_key = make_template_fragment_key('contest_description',
                                                [new_contest.pk])
         cache.delete(cache_key)
-        messages.add_message(request, messages.SUCCESS, "Contest have been successfully created or updated.")
+        messages.add_message(request, messages.SUCCESS, "Contest has been successfully updated.")
         return HttpResponseRedirect(reverse('contest_details',
                                             args=[new_contest.pk]))
 
+    messages.add_message(request, messages.SUCCESS, "Contest has been successfully created.")
     return render(request, 'contest/contest_new.html', {
         'form': form,
         'form_post': form_post

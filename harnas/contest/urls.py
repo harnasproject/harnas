@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'^contest/(?P<contest_id>\d+)/news/(?P<news_id>\d+)/delete/$', news.delete, name='contest_news_delete'),
 
     url(r'^task/$', task.index, name='task_index'),
-    url(r'^task/(?P<id>\d+)/$', task.details, name='task_details'),
+    url(r'^task/(?P<task_id>\d+)/$', task.details, name='task_details'),
     url(r'^task/new$', task.edit, name='task_new'),
     url(r'^task/edit/(?P<id>\d+)/$', task.edit, name='task_edit'),
     url(r'^task/(?P<id>\d+)/upload_file/$', task.upload_file, name='task_upload_file'),
