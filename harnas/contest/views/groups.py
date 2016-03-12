@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -59,10 +58,12 @@ def view(request, contest_id, group_id):
         return HttpResponseRedirect('/')
     else:
         group = Group.objects.get(pk=group_id)
-        return render(request, 'contest/group_view.html', {
+
+        return render(request, 'contest/group_details.html', {
             'contest': contest,
             'group': group,
-            'tasks_details': GroupTaskDetails.objects.filter(group=group_id)
+            'tasks_details': GroupTaskDetails.objects.filter(group=group_id),
+            'participants': group.user_set.all()
         })
 
 
@@ -82,7 +83,7 @@ def edit_task_details(request, contest_id, group_id, task_id):
                 details.close = form.cleaned_data['close']
                 details.save()
                 messages.add_message(request, messages.SUCCESS, "Timestamps have been updated.")
-                return HttpResponseRedirect(reverse('contest_group_edit', args=[contest_id, group_id]))
+                return HttpResponseRedirect(reverse('contest_group_details', args=[contest_id, group_id]))
         else:
             details = GroupTaskDetails.objects.get(task=task_id, group=group_id)
             return render(request, 'contest/task_details_edit.html', {

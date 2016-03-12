@@ -122,6 +122,7 @@
                 <tr>
                     <th>Group id</th>
                     <th>Group name</th>
+                    <th>Number of participants</th>
                     {% if 'manage_contest' in contest_perms %}
                         <th>Manage group</th>
                     {% endif %}
@@ -129,10 +130,11 @@
                 {% for group in groups %}
                 <tr>
                     <td>#{{ group.pk }}</td>
-                    <td><a href="{% url 'contest_group_edit' contest.pk group.pk %}">{{ group.name }}</a></td>
+                    <td><a href="{% url 'contest_group_details' contest.pk group.pk %}">{{ group.name }}</a></td>
+                    <td>{{ group.user_set.count }}</td>
                     {% if 'manage_contest' in contest_perms %}
                         <td class="text-right">
-                            <a href="{% url 'contest_group_edit' contest.pk group.pk %}" class="btn btn-default btn-xs"> Edit</a>
+                            <a href="{% url 'contest_group_details' contest.pk group.pk %}" class="btn btn-default btn-xs"> Edit</a>
                             <a href="{% url 'contest_group_delete' contest.pk group.pk %}" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure?')" > Delete</a>
                         </td>
                     {% endif %}
@@ -152,13 +154,17 @@
         <div class="tab-pane {% if tab == 'participants' %} active {% endif %}" role="tabpanel" id="participants">
                 <table class="table table-striped">
                     <tr>
+                        <th>Username</th>
                         <th>First name</th>
                         <th>Last name</th>
+                        <th>Organization</th>
                     </tr>
                     {% for participant in participants %}
                     <tr>
-                        <td>{{ participant }}</td>
-                        <td></td>
+                        <td><a href="{% url 'account_profile' participant.pk %}">{{ participant }}</a></td>
+                        <td>{{ participant.first_name }}</td>
+                        <td>{{ participant.last_name }}</td>
+                        <td>{{ participant.userprofile.get_organization_display }}</td>
                     </tr>
                     {% endfor %}
                 </table>

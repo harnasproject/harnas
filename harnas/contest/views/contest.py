@@ -95,7 +95,7 @@ def edit(request, id=None):
         cache_key = make_template_fragment_key('contest_description',
                                                [new_contest.pk])
         cache.delete(cache_key)
-        messages.add_message(request, messages.SUCCESS, "New contest has been successfully created.")
+        messages.add_message(request, messages.SUCCESS, "Contest have been successfully created or updated.")
         return HttpResponseRedirect(reverse('contest_details',
                                             args=[new_contest.pk]))
 
@@ -111,7 +111,7 @@ def fetch_task(request, id):
     contest = Contest.objects.get(pk=id)
     if not request.user.has_perm('manage_contest', contest):
         permission_denied_message(request)
-    if request.method == 'POST':
+    elif request.method == 'POST':
         form = TaskFetchForm(request.POST)
         if form.is_valid():
             parent_task = form.cleaned_data['task']

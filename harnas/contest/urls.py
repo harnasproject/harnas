@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^contest/(?P<id>\d+)/edit/$', contest.edit, name='contest_edit'),
     url(r'^contest/(?P<id>\d+)/(?P<tab>\w+)/$', contest.details, name='contest_details'),
     url(r'^contest/(?P<contest_id>\d+)/groups/new/$', groups.new, name='contest_group_new'),
-    url(r'^contest/(?P<contest_id>\d+)/groups/(?P<group_id>\d+)/edit/$', groups.view, name='contest_group_edit'),
+    url(r'^contest/(?P<contest_id>\d+)/groups/(?P<group_id>\d+)/$', groups.view, name='contest_group_details'),
     url(r'^contest/(?P<contest_id>\d+)/groups/(?P<group_id>\d+)/delete/$', groups.delete, name='contest_group_delete'),
     url(r'^contest/(?P<contest_id>\d+)/groups/(?P<group_id>\d+)/tasks/(?P<task_id>\d+)/edit/$',
         groups.edit_task_details, name='contest_task_details_edit'),
