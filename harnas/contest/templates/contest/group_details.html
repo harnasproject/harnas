@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load guardian_tags %}
+{% block title %}
+    {{ block.super }} | Edit group
+{% endblock %}
+{% block content %}
+    {% get_obj_perms request.user for contest as "contest_perms" %}
+
+    <div class="page-header">
+        <div class="pull-left">
+            <h1>{{ group.name }}</h1>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <nav>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#tasks" aria-controls="tasks" role="tab" data-toggle="tab">
+                    {% trans 'Tasks' %}
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="#participants" aria-controls="participants" role="tab" data-toggle="tab">
+                    {% trans 'Participants' %}
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="tab-content">
+        <div class="tab-pane active" role="tabpanel" id="tasks">
+            <table class="table table-striped">
+                <tr>
+                    <th>Task</th>
+                    <th>Open</th>
+                    <th>Deadline</th>
+                    <th>Close</th>
+                    {% if 'manage_contest' in contest_perms %}
+                        <th>Manage</th>
+                    {% endif %}
+                </tr>
+                {% for task_details in tasks_details %}
+                <tr>
+                    <td>{{ task_details.task.display_name }}</td>
+                    <td>{{ task_details.open }}</td>
+                    <td>{{ task_details.deadline }}</td>
+                    <td>{{ task_details.close }}</td>
+                    {% if 'manage_contest' in contest_perms %}
+                    <td><a href="{% url 'contest_task_details_edit' contest.pk group.pk task_details.task.pk %}">Edit</a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+        <div class="tab-pane" role="tabpanel" id="participants">
+            <table class="table table-striped">
+                <tr>
+                    <th>Username</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Organization</th>
+                </tr>
+                {% for participant in participants %}
+                <tr>
+                    <td><a href="{% url 'account_profile' participant.pk %}">{{ participant }}</a></td>
+                    <td>{{ participant.first_name }}</td>
+                    <td>{{ participant.last_name }}</td>
+                    <td>{{ participant.userprofile.get_organization_display }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

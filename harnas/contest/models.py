@@ -52,6 +52,7 @@ class Task(models.Model):
     parent = models.ForeignKey('self', null=True, default=None)
     contest = models.ForeignKey(Contest, null=True, default=None)
 
+    # Default timestamps values for task. Can be overridden individually in groups. See GroupsTaskDetails.
     open = models.DateTimeField(null=True, default=None)
     deadline = models.DateTimeField(null=True, default=None)
     close = models.DateTimeField(null=True, default=None)
