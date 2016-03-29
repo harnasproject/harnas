@@ -5,7 +5,8 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import Group
 from django.shortcuts import render
-from django.views.decorators.http import require_POST, require_GET, require_http_methods
+from django.views.decorators.http import require_POST, require_GET, \
+                                         require_http_methods
 from guardian.shortcuts import assign_perm
 
 from harnas.contest.models import Contest, GroupTaskDetails, Task
@@ -33,11 +34,11 @@ def new(request, contest_id):
                                                     open=task.open,
                                                     deadline=task.deadline,
                                                     close=task.close)
-                success_msg = 'New group %s for contest %s has been created.' % (group.name, contest.name)
+                success_msg = 'New group %s for contest %s has been created.' \
+                              % (group.name, contest.name)
                 messages.add_message(request,
                                      messages.SUCCESS,
-                                     success_msg
-                                     )
+                                     success_msg)
             else:
                 messages.add_message(request,
                                      messages.ERROR,
@@ -70,22 +71,30 @@ def view(request, contest_id, group_id):
 @login_required
 @require_http_methods(['POST', 'GET'])
 def edit_task_details(request, contest_id, group_id, task_id):
-    if not request.user.has_perm('manage_contest', Contest.objects.get(pk=contest_id)):
+    if not request.user.has_perm('manage_contest',
+                                 Contest.objects.get(pk=contest_id)):
         permission_denied_message(request)
-        return HttpResponseRedirect(reverse('contest_details', args=[contest_id]))
+        return HttpResponseRedirect(reverse('contest_details',
+                                            args=[contest_id]))
     else:
         if request.method == 'POST':
             form = TaskDetailsForm(request.POST)
             if form.is_valid():
-                details = GroupTaskDetails.objects.get(group=group_id, task=task_id)
+                details = GroupTaskDetails.objects.get(group=group_id,
+                                                       task=task_id)
                 details.open = form.cleaned_data['open']
                 details.deadline = form.cleaned_data['deadline']
                 details.close = form.cleaned_data['close']
                 details.save()
-                messages.add_message(request, messages.SUCCESS, "Timestamps have been updated.")
-                return HttpResponseRedirect(reverse('contest_group_details', args=[contest_id, group_id]))
+                messages.add_message(request,
+                                     messages.SUCCESS,
+                                     "Timestamps have been updated.")
+                return HttpResponseRedirect(reverse('contest_group_details',
+                                                    args=[contest_id,
+                                                          group_id]))
         else:
-            details = GroupTaskDetails.objects.get(task=task_id, group=group_id)
+            details = GroupTaskDetails.objects.get(task=task_id,
+                                                   group=group_id)
             return render(request, 'contest/task_details_edit.html', {
                 'contest_id': contest_id,
                 'group_id': group_id,
@@ -96,13 +105,20 @@ def edit_task_details(request, contest_id, group_id, task_id):
 
 @login_required
 def delete(request, contest_id, group_id):
-    if not request.user.has_perm('manage_contest', Contest.objects.get(pk=contest_id)):
+    if not request.user.has_perm('manage_contest',
+                                 Contest.objects.get(pk=contest_id)):
         permission_denied_message(request)
-        return HttpResponseRedirect(reverse('contest_details', args=[contest_id, 'groups']))
+        return HttpResponseRedirect(reverse('contest_details',
+                                            args=[contest_id, 'groups']))
     else:
         try:
             Group.objects.get(pk=group_id).delete()
-            messages.add_message(request, messages.SUCCESS, "Group has been successfully deleted.")
+            messages.add_message(request,
+                                 messages.SUCCESS,
+                                 "Group has been successfully deleted.")
         except ObjectDoesNotExist:
-            messages.add_message(request, messages.ERROR, "Group does not exists.")
-        return HttpResponseRedirect(reverse('contest_details', args=[contest_id, 'groups']))
+            messages.add_message(request,
+                                 messages.ERROR,
+                                 "Group does not exists.")
+        return HttpResponseRedirect(reverse('contest_details',
+                                            args=[contest_id, 'groups']))

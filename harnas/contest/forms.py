@@ -4,7 +4,8 @@ from django.forms import ModelForm, Form
 from django.contrib.auth.models import Group
 
 
-from harnas.contest.models import TestCase, Task, News, Contest, GroupTaskDetails
+from harnas.contest.models import TestCase, Task, News, Contest, \
+                                  GroupTaskDetails
 
 
 class TestCaseForm(ModelForm):
@@ -64,5 +65,5 @@ class TaskFetchForm(Form):
         date_close = cleaned_data.get("close")
 
         if not date_open < date_deadline < date_close:
-            raise forms.ValidationError("Dates must be in order open < deadline < close.")
-
+            raise forms.ValidationError("Dates must be in order open < " +
+                                        "deadline < close.")
