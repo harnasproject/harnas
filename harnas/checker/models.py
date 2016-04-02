@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
 from harnas.checker.utils import get_templates_list
-
+from harnas.contest.models import Task
 
 class TestEnvironment(models.Model):
     template_name = models.CharField(max_length=250)
@@ -59,3 +59,17 @@ class Submit(models.Model):
     solution = models.BinaryField()
     status = models.CharField(max_length=3,
                               choices=STATUS_CHOICES)
+
+
+class SubmitForm(ModelForm):
+    solution = forms.FileField(label="Upload your solution")
+    task = forms.ModelChoiceField(queryset=None, empty_label=None)
+
+    def __init__(self, *args, **kwargs):
+        contest = kwargs.pop('contest')
+        super(SubmitForm, self).__init__(*args, **kwargs)
+        self.fields['task'].queryset = Task.objects.filter(contest=contest)
+
+    class Meta:
+        model = Submit
+        fields = []

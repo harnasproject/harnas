@@ -22,6 +22,9 @@
         </div>
         <div class="clearfix"></div>
     </div>
+    <div class="pull-right">
+        <a href="{% url 'submit_task' %}" class="btn btn-default">Submit</a>
+    </div>
     {% if 'edit_task' in task_perms %}
         <nav>
             <ul class="nav nav-tabs" role="tablist">

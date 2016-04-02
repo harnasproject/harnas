@@ -3,7 +3,6 @@ from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from harnas.checker.models import TestEnvironment
 from harnas.contest import helpers
 
 
@@ -47,12 +46,13 @@ class Task(models.Model):
     name = models.CharField(max_length=250)
     short_name = models.CharField(max_length=3)
     description = models.TextField()
-    test_environment = models.ForeignKey(TestEnvironment)
+    test_environment = models.ForeignKey('checker.TestEnvironment')
     author = models.ForeignKey(User)
     parent = models.ForeignKey('self', null=True, default=None)
     contest = models.ForeignKey(Contest, null=True, default=None)
 
-    # Default timestamps values for task. Can be overridden individually in groups. See GroupsTaskDetails.
+    # Default timestamps values for task. Can be overridden individually in
+    # groups. See GroupsTaskDetails.
     open = models.DateTimeField(null=True, default=None)
     deadline = models.DateTimeField(null=True, default=None)
     close = models.DateTimeField(null=True, default=None)
