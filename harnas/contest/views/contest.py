@@ -17,6 +17,8 @@ from guardian.shortcuts import assign_perm, get_users_with_perms
 from harnas.contest.models import Contest, Task, GroupTaskDetails
 from harnas.contest.forms import ContestForm, NewsForm, TaskFetchForm
 from harnas.utils import permission_denied_message
+from harnas.checker.forms import SubmitForm
+from harnas.checker.models import Submit
 
 
 @require_safe
@@ -134,3 +136,38 @@ def fetch_task(request, id):
 
     return HttpResponseRedirect(reverse('contest_details',
                                         args=[id, 'tasks']))
+
+
+@require_safe
+@login_required
+def submit(request, id):
+    task_id = request.GET.get('task_id', None)
+    contest = Contest.objects.get(pk=id)
+    submit_form = SubmitForm(contest=contest,
+                             initial={'task': task_id})
+    return render(request, 'contest/contest_submit.html', {
+        'submit_form': submit_form,
+        'contest_id': id,
+    })
+
+
+@require_http_methods(['POST'])
+@login_required
+def save_submit(request, id):
+    contest = Contest.objects.get(pk=id)
+    if request.method == 'POST':
+        submit_form = SubmitForm(request.POST, request.FILES, contest=contest)
+        print(str(request.FILES))
+        if submit_form.is_valid():
+            submit = Submit()
+            submit.submitter = request.user
+            submit.task = submit_form.cleaned_data['task']
+            submit.solution = bytes(request.FILES['solution'].read())
+            submit.status = Submit.QUEUED
+            submit.save()
+            return HttpResponseRedirect(reverse('submit_details',
+                                                args=[id]))
+    return render(request, 'contest/contest_submit.html', {
+        'submit_form': submit_form,
+        'contest_id': id,
+    })

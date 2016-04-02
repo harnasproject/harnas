@@ -1,9 +1,6 @@
-from django import forms
 from django.contrib.auth.models import User
 from django.db import models
-from django.forms import ModelForm
-from harnas.checker.utils import get_templates_list
-from harnas.contest.models import Task
+
 
 class TestEnvironment(models.Model):
     template_name = models.CharField(max_length=250)
@@ -18,19 +15,6 @@ class TestEnvironment(models.Model):
 
     def __str__(self):
         return self.template_name
-
-
-class TestEnvironmentForm(ModelForm):
-
-    template_name = forms.ChoiceField(
-        choices=lambda: [(template.id, template.name) for template in get_templates_list()])
-    maintainer = forms.ModelChoiceField(
-        queryset=User.objects.exclude(username='AnonymousUser'),
-        empty_label=None)
-
-    class Meta:
-        model = TestEnvironment
-        fields = ['summary', 'description']
 
 
 class Submit(models.Model):
@@ -59,17 +43,3 @@ class Submit(models.Model):
     solution = models.BinaryField()
     status = models.CharField(max_length=3,
                               choices=STATUS_CHOICES)
-
-
-class SubmitForm(ModelForm):
-    solution = forms.FileField(label="Upload your solution")
-    task = forms.ModelChoiceField(queryset=None, empty_label=None)
-
-    def __init__(self, *args, **kwargs):
-        contest = kwargs.pop('contest')
-        super(SubmitForm, self).__init__(*args, **kwargs)
-        self.fields['task'].queryset = Task.objects.filter(contest=contest)
-
-    class Meta:
-        model = Submit
-        fields = []

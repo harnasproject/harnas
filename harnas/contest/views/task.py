@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods, require_safe
 from guardian.shortcuts import assign_perm
 from guardian.shortcuts import get_objects_for_user
-from harnas.checker.models import SubmitForm
+from harnas.checker.forms import SubmitForm
 from harnas.contest.models import Task
 from harnas.contest.forms import TaskForm, UploadFileForm
 from django.core.files.storage import FileSystemStorage
@@ -48,11 +48,12 @@ def details(request, task_id):
     if request.user.has_perm('contest.submit_solution', task):
         submit_form = SubmitForm(contest=task.contest)
 
-    return render(request, 'contest/task_details.html',
-                  { 'task': task, 
-                    'task_files': task_files,
-                    'upload_file_form': upload_file_form,
-                    'submit_form': submit_form })
+    return render(request, 'contest/task_details.html', {
+                  'task': task,
+                  'task_files': task_files,
+                  'upload_file_form': upload_file_form,
+                  'submit_form': submit_form
+           })
 
 
 @require_http_methods(['GET', 'POST'])
@@ -137,9 +138,3 @@ def delete_file(request, id):
     task_filesystem.delete(file_path)
     return HttpResponseRedirect(reverse('task_details',
                                         args=[task.pk]))
-
-@require_safe
-@login_required
-def submit(request):
-    task_id = request.GET.get('task_id', None)
-    task = Task.objects.get(pk=task_id) if task_id else None

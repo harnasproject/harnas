@@ -7,7 +7,8 @@ from django.core.cache.utils import make_template_fragment_key
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods, require_safe
 from guardian.shortcuts import assign_perm
-from harnas.checker.models import TestEnvironment, TestEnvironmentForm
+from harnas.checker.models import TestEnvironment
+from harnas.checker.forms import TestEnvironmentForm
 
 
 @require_safe
@@ -16,7 +17,7 @@ def index(request):
     test_envs = TestEnvironment.objects.all()
     return render(request,
                   'checker/test_environment_index.html',
-                  { 'test_envs': test_envs })
+                  {'test_envs': test_envs})
 
 
 @require_safe
@@ -26,7 +27,7 @@ def details(request, id):
     if not request.user.has_perm('checker.view_test_environment', test_env):
         raise PermissionDenied
     return render(request, 'checker/test_environment_details.html',
-                  { 'test_env': test_env })
+                  {'test_env': test_env})
 
 
 @require_http_methods(['GET', 'POST'])
@@ -62,7 +63,7 @@ def edit(request, id=None):
                                                [new_test_env.pk])
         cache.delete(cache_key)
         return HttpResponseRedirect(reverse('test_environment_details',
-                                             args=[new_test_env.pk]))
-    return render(request, 'checker/test_environment_new.html',
-                  { 'form': form,
-                    'form_post': form_post })
+                                            args=[new_test_env.pk]))
+    return render(request, 'checker/test_environment_new.html', {
+                  'form': form,
+                  'form_post': form_post})
