@@ -8,6 +8,8 @@ from harnas.checker.models import Submit
 @require_safe
 def details(request, id):
     submit = Submit.objects.get(pk=id)
+    solution = bytes(submit.solution).decode("utf-8")
     return render(request, 'contest/submit_details.html', {
         'submit': submit,
+        'solution': solution,
     })

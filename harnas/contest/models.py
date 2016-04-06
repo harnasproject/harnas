@@ -50,6 +50,7 @@ class Task(models.Model):
     author = models.ForeignKey(User)
     parent = models.ForeignKey('self', null=True, default=None)
     contest = models.ForeignKey(Contest, null=True, default=None)
+    max_solution_size = models.PositiveIntegerField()
 
     # Default timestamps values for task. Can be overridden individually in
     # groups. See GroupsTaskDetails.

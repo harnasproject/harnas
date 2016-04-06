@@ -22,7 +22,8 @@ class UploadFileForm(Form):
 class TaskForm(ModelForm):
     class Meta:
         model = Task
-        fields = ['name', 'short_name', 'description', 'test_environment']
+        fields = ['name', 'short_name', 'description', 'test_environment',
+                  'max_solution_size']
 
 
 class NewsForm(ModelForm):

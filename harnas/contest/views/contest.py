@@ -166,7 +166,7 @@ def save_submit(request, id):
             submit.status = Submit.QUEUED
             submit.save()
             return HttpResponseRedirect(reverse('submit_details',
-                                                args=[id]))
+                                                args=[submit.pk]))
     return render(request, 'contest/contest_submit.html', {
         'submit_form': submit_form,
         'contest_id': id,
