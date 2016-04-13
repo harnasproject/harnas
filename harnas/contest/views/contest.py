@@ -28,8 +28,8 @@ def index(request):
 
 @require_safe
 @login_required
-def details(request, id, tab='news'):
-    contest = Contest.objects.get(pk=id)
+def details(request, contest_id, tab='news'):
+    contest = Contest.objects.get(pk=contest_id)
     if not request.user.has_perm('contest.view_contest', contest):
         permission_denied_message(request)
         return HttpResponseRedirect('/')
@@ -68,10 +68,10 @@ def details(request, id, tab='news'):
 
 @require_http_methods(['GET', 'POST'])
 @login_required
-def edit(request, id=None):
-    if id:
-        contest = Contest.objects.get(pk=id)
-        form_post = reverse('contest_edit', args=[id])
+def edit(request, contest_id=None):
+    if contest_id:
+        contest = Contest.objects.get(pk=contest_id)
+        form_post = reverse('contest_edit', args=[contest_id])
         if not request.user.has_perm('contest.manage_contest', contest):
             permission_denied_message(request)
             return HttpResponseRedirect('/')
@@ -89,7 +89,7 @@ def edit(request, id=None):
     if form.is_valid():
         new_contest = form.save(commit=False)
         new_contest.slug = slugify(new_contest.name)
-        if id is None:
+        if contest_id is None:
             new_contest.creator_id = request.user.pk
         new_contest.save()
         assign_perm('contest.manage_contest', request.user, new_contest)
@@ -97,11 +97,15 @@ def edit(request, id=None):
         cache_key = make_template_fragment_key('contest_description',
                                                [new_contest.pk])
         cache.delete(cache_key)
-        messages.add_message(request, messages.SUCCESS, "Contest has been successfully updated.")
+        messages.add_message(request,
+                             messages.SUCCESS,
+                             "Contest has been successfully updated.")
         return HttpResponseRedirect(reverse('contest_details',
                                             args=[new_contest.pk]))
 
-    messages.add_message(request, messages.SUCCESS, "Contest has been successfully created.")
+    messages.add_message(request,
+                         messages.SUCCESS,
+                         "Contest has been successfully created.")
     return render(request, 'contest/contest_new.html', {
         'form': form,
         'form_post': form_post
@@ -110,8 +114,8 @@ def edit(request, id=None):
 
 @require_POST
 @login_required
-def fetch_task(request, id):
-    contest = Contest.objects.get(pk=id)
+def fetch_task(request, contest_id):
+    contest = Contest.objects.get(pk=contest_id)
     if not request.user.has_perm('manage_contest', contest):
         permission_denied_message(request)
     elif request.method == 'POST':
@@ -126,35 +130,39 @@ def fetch_task(request, id):
             fetched_task.deadline = form.cleaned_data['deadline']
             fetched_task.close = form.cleaned_data['close']
             fetched_task.save()
-            messages.add_message(request, messages.SUCCESS, "New task has been added to contest %s."
+            messages.add_message(request,
+                                 messages.SUCCESS,
+                                 "New task has been added to contest %s."
                                  % contest.name)
             # add tasks to groups
             for group in get_groups_with_perms(contest, attach_perms=True):
-                GroupTaskDetails.objects.create(task=fetched_task, group=group,
-                                                open=fetched_task.open, deadline=fetched_task.deadline,
+                GroupTaskDetails.objects.create(task=fetched_task,
+                                                group=group,
+                                                open=fetched_task.open,
+                                                deadline=fetched_task.deadline,
                                                 close=fetched_task.close)
 
     return HttpResponseRedirect(reverse('contest_details',
-                                        args=[id, 'tasks']))
+                                        args=[contest_id, 'tasks']))
 
 
 @require_safe
 @login_required
-def submit(request, id):
+def submit(request, contest_id):
     task_id = request.GET.get('task_id', None)
-    contest = Contest.objects.get(pk=id)
+    contest = Contest.objects.get(pk=contest_id)
     submit_form = SubmitForm(contest=contest,
                              initial={'task': task_id})
     return render(request, 'contest/contest_submit.html', {
         'submit_form': submit_form,
-        'contest_id': id,
+        'contest_id': contest_id,
     })
 
 
 @require_http_methods(['POST'])
 @login_required
-def save_submit(request, id):
-    contest = Contest.objects.get(pk=id)
+def save_submit(request, contest_id):
+    contest = Contest.objects.get(pk=contest_id)
     if request.method == 'POST':
         submit_form = SubmitForm(request.POST, request.FILES, contest=contest)
         print(str(request.FILES))
@@ -169,5 +177,5 @@ def save_submit(request, id):
                                                 args=[submit.pk]))
     return render(request, 'contest/contest_submit.html', {
         'submit_form': submit_form,
-        'contest_id': id,
+        'contest_id': contest_id,
     })
