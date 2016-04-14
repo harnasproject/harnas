@@ -7,7 +7,6 @@ harnas.db
 htmlcov/
 .coverage
 .vagrant/
-static
 tasks_files
 harnas.sublime-project
 er.pdf

@@ -4,6 +4,7 @@
 {% load crispy_forms_tags %}
 {% load pandoc_convert %}
 {% load cache %}
+{% load static %}
 {% block title %}
     {{ block.super }} | {{ contest.name }}
 {% endblock %}
@@ -20,33 +21,33 @@
     </div>
     <nav>
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="{% if tab == 'description' %} active {% endif %}">
+            <li role="presentation">
                 <a href="#description" aria-controls="description" role="tab" data-toggle="tab">
                     {% trans 'Description' %}
                 </a>
             </li>
-            <li role="presentation" class="{% if tab == 'news' %} active {% endif %}">
+            <li role="presentation">
                 <a href="#news" aria-controls="news" role="tab" data-toggle="tab">
                     {% trans 'News' %}
                 </a>
             </li>
-            <li role="presentation" class="{% if tab == 'tasks' %} active {% endif %}">
+            <li role="presentation">
                 <a href="#tasks" aria-controls="tasks" role="tab" data-toggle="tab">
                     {% trans 'Tasks' %}
                 </a>
             </li>
-            <li role="presentation" class="{% if tab == 'groups' %} active {% endif %}">
+            <li role="presentation">
                 <a href="#groups" aria-controls="groups" role="tab" data-toggle="tab">
                     {% trans 'Groups' %}
                 </a>
             </li>
             {% if 'manage_contest' in contest_perms %}
-            <li role="presentation" class="{% if tab == 'participants' %} active {% endif %}">
+            <li role="presentation">
                 <a href="#participants" aria-controls="participants" role="tab" data-toggle="tab">
                     {% trans 'Participants' %}
                 </a>
             </li>
-            <li role="presentation" class="{% if tab == 'edit' %} active {% endif %}">
+            <li role="presentation">
                 <a href="#edit" aria-controls="edit" role="tab" data-toggle="tab">
                     {% trans 'Edit' %}
                 </a>
@@ -55,12 +56,12 @@
         </ul>
     </nav>
     <div class="tab-content">
-        <div class="tab-pane {% if tab == 'description' %} active {% endif %}" role="tabpanel" id="description">
+        <div class="tab-pane" role="tabpanel" id="description">
         {% cache 86400 contest_description contest.pk %}
             {{ contest.description|to_html }}
         {% endcache %}
         </div>
-        <div class="tab-pane {% if tab == 'news' %} active {% endif %}" role="tabpanel" id="news">
+        <div class="tab-pane" role="tabpanel" id="news">
             <table class = "table .table-hover" >
                 {% for news in news_set %}
                     <tr><td>
@@ -95,7 +96,7 @@
                 {% endif %}
             </table>
         </div>
-        <div class="tab-pane {% if tab == 'tasks' %} active {% endif %}" role="tabpanel" id="tasks">
+        <div class="tab-pane" role="tabpanel" id="tasks">
             <table class="table table-striped">
                 <tr>
                     <th>Short name</th>
@@ -117,7 +118,7 @@
             </form>
             {% endif %}
         </div>
-        <div class="tab-pane {% if tab == 'groups' %} active {% endif %}" role="tabpanel" id="groups">
+        <div class="tab-pane" role="tabpanel" id="groups">
             <table class="table table-striped">
                 <tr>
                     <th>Group id</th>
@@ -151,7 +152,7 @@
             {% endif %}
         </div>
         {% if 'manage_contest' in contest_perms %}
-        <div class="tab-pane {% if tab == 'participants' %} active {% endif %}" role="tabpanel" id="participants">
+        <div class="tab-pane" role="tabpanel" id="participants">
                 <table class="table table-striped">
                     <tr>
                         <th>Username</th>
@@ -169,7 +170,7 @@
                     {% endfor %}
                 </table>
         </div>
-        <div class="tab-pane {% if tab == 'edit' %} active {% endif %}" role="tabpanel" id="edit">
+        <div class="tab-pane" role="tabpanel" id="edit">
             <form action="{% url 'contest_edit' contest.pk %}" method="post">
                 {% csrf_token %}
                 {{ contest_form|crispy }}
@@ -178,4 +179,6 @@
         </div>
         {% endif %}
     </div>
+    <input id="current_tab" type="hidden" name="current_tab" value="{{ current_tab }}">
+    <script type="text/javascript" src="{% static 'js/contest.js' %}"></script>
 {% endblock %}
