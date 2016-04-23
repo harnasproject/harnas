@@ -37,7 +37,7 @@
             <ul class="dropdown-menu">
               <li class="dropdown-header"><a href="{% url 'contest_index' %}"><b>Your contests</b></a></li>
               {% for contest in contests|slice:":3" %}
-              <li><a href="{% url 'contest_details' contest.pk %}">{{ contest.name }}</a></li>
+              <li><a href="{% url 'contest_details' contest.pk %}?current_tab=news">{{ contest.name }}</a></li>
               {% endfor %}
               {% if perms.contest.add_contest %}
               <li role="separator" class="divider"></li>

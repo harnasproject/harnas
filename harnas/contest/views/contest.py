@@ -29,8 +29,6 @@ def index(request):
 @require_safe
 @login_required
 def details(request, contest_id):
-    current_tab = request.GET.get('current_tab', 'news')
-
     contest = Contest.objects.get(pk=contest_id)
     if not request.user.has_perm('contest.view_contest', contest):
         permission_denied_message(request)
@@ -65,7 +63,6 @@ def details(request, contest_id):
         'news_form': news_form,
         'fetch_task_form': fetch_task_form,
         'tasks': tasks,
-        'current_tab': current_tab,
     })
 
 
