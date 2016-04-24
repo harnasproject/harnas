@@ -180,7 +180,8 @@ def save_submit(request, contest_id):
             template = heraclient.Template(template_id)
             sandbox = heraclient.Sandbox(submit.id)
             webhook_url = 'http://' if settings.DEBUG else 'https://'
-            webhook_url += request.get_host()
+            host = request.get_host() if settings.DEBUG else settings.SITE_URL
+            webhook_url += host
             webhook_url += reverse('checker_check')
             sandbox.create(10,
                            template,
