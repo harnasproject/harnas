@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 class TestEnvironmentForm(ModelForm):
 
     template_name = forms.ChoiceField(
-        choices=lambda: [(template.id, template.name)
+        choices=lambda: [(template.name, template.name)
                          for template in get_templates_list()])
     maintainer = forms.ModelChoiceField(
         queryset=User.objects.exclude(username='AnonymousUser'),
