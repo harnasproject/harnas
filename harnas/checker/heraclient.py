@@ -32,9 +32,8 @@ try:
 except ImportError:
     import http.client as httplib
 
-URL = 'http://api.hera.dev/' if settings.HERA_URL is None else settings.HERA_URL
-
-default_auth = None
+URL = 'https://api.hera.dev/' if settings.HERA_URL is None else settings.HERA_URL
+default_auth = settings.HERA_AUTH
 
 _auth = os.environ.get('HERA_AUTH')
 if _auth:

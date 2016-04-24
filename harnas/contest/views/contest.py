@@ -7,6 +7,7 @@ from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
+from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.text import slugify
@@ -19,6 +20,7 @@ from harnas.contest.forms import ContestForm, NewsForm, TaskFetchForm
 from harnas.utils import permission_denied_message
 from harnas.checker.forms import SubmitForm
 from harnas.checker.models import Submit
+from harnas.checker import heraclient
 
 
 @require_safe
@@ -173,6 +175,23 @@ def save_submit(request, contest_id):
             submit.solution = bytes(request.FILES['solution'].read())
             submit.status = Submit.QUEUED
             submit.save()
+
+            template_id = submit.task.test_environment.template_name
+            template = heraclient.Template(template_id)
+            sandbox = heraclient.Sandbox(submit.id)
+            webhook_url = 'http://' if settings.DEBUG else 'https://'
+            webhook_url += request.get_host()
+            webhook_url += reverse('checker_check')
+            sandbox.create(10,
+                           template,
+                           memory=512,
+                           whole_node=False if settings.DEBUG else True,
+                           async=True,
+                           webhook_url=webhook_url,
+                           webhook_secret='dupa',
+                           priority=None,
+                           priority_growth=None)
+
             return HttpResponseRedirect(reverse('submit_details',
                                                 args=[submit.pk]))
     return render(request, 'contest/contest_submit.html', {

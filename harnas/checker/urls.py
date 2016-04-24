@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
-from harnas.checker.views import cluster, template, test_environment
+from harnas.checker.views import cluster, template, test_environment, checker
 
 test_environment_urlpatterns = [
     url(r'^$',
@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^status/$', cluster.status, name='cluster_status'),
     url(r'^template/$', template.index, name='template_index'),
     url(r'test_environment/', include(test_environment_urlpatterns)),
+    url(r'^hera_callback/$', checker.check, name='checker_check'),
 ]

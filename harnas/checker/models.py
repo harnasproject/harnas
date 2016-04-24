@@ -43,3 +43,6 @@ class Submit(models.Model):
     solution = models.BinaryField()
     status = models.CharField(max_length=3,
                               choices=STATUS_CHOICES)
+
+    def __str__(self):
+        return self.id
