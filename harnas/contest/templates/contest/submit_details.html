@@ -5,10 +5,19 @@
     {{ block.super }} | Submit #{{ submit.pk }}
 {% endblock %}
 {% block content %}
-    <p>{{ submit.pk }}</p>
-    <p>{{ submit.task.contest }}</p>
-    <p>{{ submit.task }}</p>
-    <p>{{ submit.submitter }}</p>
+    <div class="page_header">
+        <div class="pull-left">
+            <h1>Submit #{{ submit.pk }}</h1>
+        </div>
+    </div>
+    <div class="pull-right">
+        <h1>
+            <span class="small">
+                <a href="{% url 'contest_details' submit.task.contest.pk %}?current_tab=news">{{ submit.task.contest }}</a> | <a href="{% url 'task_details' submit.task.pk %}">{{ submit.task }}</a>
+            </span>
+        </h1>
+    </div>
+    <div class="clearfix"></div>
     <pre><code>{{ solution }}</code></pre>
     <script>hljs.initHighlightingOnLoad();</script>
 {% endblock %}
