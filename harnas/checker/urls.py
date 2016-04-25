@@ -20,5 +20,9 @@ urlpatterns = [
     url(r'^status/$', cluster.status, name='cluster_status'),
     url(r'^template/$', template.index, name='template_index'),
     url(r'test_environment/', include(test_environment_urlpatterns)),
-    url(r'^hera_callback/$', checker.check, name='checker_check'),
+    url(r'^hera_callback/', include([
+        url(r'^submit/(?P<submit_id>\d+)/$',
+            checker.check,
+            name='checker_check'),
+    ])),
 ]

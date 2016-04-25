@@ -1,6 +1,5 @@
-from datetime import datetime
-
 from copy import deepcopy
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
@@ -21,6 +20,10 @@ from harnas.utils import permission_denied_message
 from harnas.checker.forms import SubmitForm
 from harnas.checker.models import Submit
 from harnas.checker import heraclient
+
+
+import string
+import random
 
 
 @require_safe
@@ -169,11 +172,14 @@ def save_submit(request, contest_id):
         submit_form = SubmitForm(request.POST, request.FILES, contest=contest)
         print(str(request.FILES))
         if submit_form.is_valid():
+            webhook_secret = _generate_webhook_secret()
+
             submit = Submit()
             submit.submitter = request.user
             submit.task = submit_form.cleaned_data['task']
             submit.solution = bytes(request.FILES['solution'].read())
-            submit.status = Submit.QUEUED
+            # submit.status = Submit.QUEUED
+            submit.webhook_secret = webhook_secret
             submit.save()
 
             template_id = submit.task.test_environment.template_name
@@ -182,14 +188,15 @@ def save_submit(request, contest_id):
             webhook_url = 'http://' if settings.DEBUG else 'https://'
             host = request.get_host() if settings.DEBUG else settings.SITE_URL
             webhook_url += host
-            webhook_url += reverse('checker_check')
+            webhook_url += reverse('checker_check', args=[submit.pk])
+
             sandbox.create(10,
                            template,
                            memory=512,
                            whole_node=False if settings.DEBUG else True,
                            async=True,
                            webhook_url=webhook_url,
-                           webhook_secret='dupa',
+                           webhook_secret=webhook_secret,
                            priority=None,
                            priority_growth=None)
 
@@ -199,3 +206,8 @@ def save_submit(request, contest_id):
         'submit_form': submit_form,
         'contest_id': contest_id,
     })
+
+
+def _generate_webhook_secret(size=settings.WEBHOOK_SECRET_LENGTH,
+                             chars=string.ascii_letters + string.digits):
+    return ''.join(random.SystemRandom().choice(chars) for _ in range(size))

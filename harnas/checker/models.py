@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -43,6 +44,15 @@ class Submit(models.Model):
     solution = models.BinaryField()
     status = models.CharField(max_length=3,
                               choices=STATUS_CHOICES)
+    webhook_secret = models.CharField(
+                        max_length=settings.WEBHOOK_SECRET_LENGTH)
 
     def __str__(self):
         return self.id
+
+    def change_status(self, status):
+        if status not in [choice[0] for choice in self.STATUS_CHOICES]:
+            raise ValueError("Invalid status")
+        else:
+            self.status = status
+            self.save()
