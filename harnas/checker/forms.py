@@ -1,11 +1,11 @@
+from django import forms
 from django.contrib.auth.models import User
 from django.forms import ModelForm
-from django import forms
-from harnas.checker.utils import get_templates_list
-from harnas.checker.models import TestEnvironment
-from harnas.contest.models import Task
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
+from harnas.checker.models import TestEnvironment
+from harnas.checker.utils import get_templates_list
+from harnas.contest.models import Task
 
 
 class TestEnvironmentForm(ModelForm):

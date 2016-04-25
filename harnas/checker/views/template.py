@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import render
 from django.views.decorators.http import require_safe
 from guardian.shortcuts import get_objects_for_user
 from harnas.checker.utils import get_templates_list

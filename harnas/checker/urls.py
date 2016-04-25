@@ -1,5 +1,5 @@
-from django.conf.urls import url, include
-from harnas.checker.views import cluster, template, test_environment, checker
+from django.conf.urls import include, url
+from harnas.checker.views import checker, cluster, template, test_environment
 
 test_environment_urlpatterns = [
     url(r'^$',

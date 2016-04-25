@@ -1,6 +1,6 @@
-from django.views.decorators.http import require_http_methods, require_safe
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from django.views.decorators.http import require_http_methods, require_safe
 from harnas.checker.models import Submit
 
 

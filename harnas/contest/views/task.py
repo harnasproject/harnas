@@ -1,19 +1,17 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from django.core.exceptions import PermissionDenied
+from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods, require_safe
-from guardian.shortcuts import assign_perm
-from guardian.shortcuts import get_objects_for_user
+from guardian.shortcuts import assign_perm, get_objects_for_user
 from harnas.checker.forms import SubmitForm
-from harnas.contest.models import Task
 from harnas.contest.forms import TaskForm, UploadFileForm
-from django.core.files.storage import FileSystemStorage
-from django.conf import settings
-
+from harnas.contest.models import Task
 
 task_filesystem = FileSystemStorage(location=settings.TASK_STORAGE_PREFIX)
 

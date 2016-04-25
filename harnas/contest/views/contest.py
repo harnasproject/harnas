@@ -1,4 +1,7 @@
+import random
+import string
 from copy import deepcopy
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -9,20 +12,16 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.text import slugify
-from django.views.decorators.http import (require_http_methods, require_safe,
-                                          require_POST)
-from guardian.shortcuts import get_groups_with_perms
-from harnas.contest.forms import GroupForm
-from guardian.shortcuts import assign_perm, get_users_with_perms
-from harnas.contest.models import Contest, Task, GroupTaskDetails
-from harnas.contest.forms import ContestForm, NewsForm, TaskFetchForm
+from django.views.decorators.http import (require_http_methods, require_POST,
+                                          require_safe)
+from guardian.shortcuts import (assign_perm, get_groups_with_perms,
+                                get_users_with_perms)
+from harnas.checker import heraclient
 from harnas.checker.forms import SubmitForm
 from harnas.checker.models import Submit
-from harnas.checker import heraclient
-
-
-import string
-import random
+from harnas.contest.forms import (ContestForm, GroupForm, NewsForm,
+                                  TaskFetchForm)
+from harnas.contest.models import Contest, GroupTaskDetails, Task
 
 
 @require_safe

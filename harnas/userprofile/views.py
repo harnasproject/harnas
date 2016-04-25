@@ -2,10 +2,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, render_to_response, get_object_or_404
+from django.shortcuts import get_object_or_404, render, render_to_response
 from django.template import RequestContext
 from django.views.decorators.http import require_safe
-
 from harnas.userprofile.forms import UserFieldsForm, UserProfileEditForm
 
 

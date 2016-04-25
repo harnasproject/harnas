@@ -1,14 +1,14 @@
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
-from django.core.exceptions import PermissionDenied
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
+from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods, require_safe
 from guardian.shortcuts import assign_perm
-from harnas.checker.models import TestEnvironment
 from harnas.checker.forms import TestEnvironmentForm
+from harnas.checker.models import TestEnvironment
 
 
 @require_safe

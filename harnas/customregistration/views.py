@@ -1,7 +1,6 @@
 from django.contrib import messages
-from django.contrib.auth.views import password_reset, password_reset_confirm, \
-    password_change, login, logout
-
+from django.contrib.auth.views import (login, logout, password_change,
+                                       password_reset, password_reset_confirm)
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _

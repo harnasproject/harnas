@@ -1,11 +1,11 @@
 from datetime import date
+
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.timezone import now
+from harnas.userprofile.models import UserProfile
 from registration.forms import RegistrationFormUniqueEmail
 from registration.users import UsernameField
-
-from harnas.userprofile.models import UserProfile
 
 
 class RegistrationForm(RegistrationFormUniqueEmail):

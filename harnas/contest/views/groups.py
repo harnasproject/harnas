@@ -1,15 +1,15 @@
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
 from django.contrib import messages
-from django.core.urlresolvers import reverse
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.views.decorators.http import (require_POST, require_GET,
-                                          require_http_methods)
+from django.views.decorators.http import (require_GET, require_http_methods,
+                                          require_POST)
 from guardian.shortcuts import assign_perm
-from harnas.contest.models import Contest, GroupTaskDetails, Task
 from harnas.contest.forms import GroupForm, TaskDetailsForm
+from harnas.contest.models import Contest, GroupTaskDetails, Task
 
 
 @login_required

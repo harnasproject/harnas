@@ -1,5 +1,4 @@
 from django.conf.urls import include, url
-
 from harnas.customregistration.views import *
 
 urlpatterns = [

@@ -4,8 +4,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods, require_safe
-from harnas.contest.models import Contest, News
 from harnas.contest.forms import NewsForm
+from harnas.contest.models import Contest, News
 
 
 @require_http_methods(['GET', 'POST'])

@@ -1,5 +1,5 @@
-from django.conf.urls import url, include
-from harnas.contest.views import contest, task, news, groups, submit
+from django.conf.urls import include, url
+from harnas.contest.views import contest, groups, news, submit, task
 
 task_urlpatterns = [
     url(r'^$',

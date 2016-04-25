@@ -1,5 +1,5 @@
-import shutil
 import errno
+import shutil
 
 
 def copy_directory(src, dest):

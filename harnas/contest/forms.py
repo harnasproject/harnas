@@ -1,11 +1,9 @@
-from django.utils.timezone import now, timedelta
 from django import forms
-from django.forms import ModelForm, Form
 from django.contrib.auth.models import Group
-
-
-from harnas.contest.models import TestCase, Task, News, Contest, \
-                                  GroupTaskDetails
+from django.forms import Form, ModelForm
+from django.utils.timezone import now, timedelta
+from harnas.contest.models import (Contest, GroupTaskDetails, News, Task,
+                                   TestCase)
 
 
 class TestCaseForm(ModelForm):
