@@ -6,17 +6,16 @@ from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
-from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.text import slugify
-from django.views.decorators.http import require_http_methods, require_safe, require_POST
+from django.views.decorators.http import (require_http_methods, require_safe,
+                                          require_POST)
 from guardian.shortcuts import get_groups_with_perms
 from harnas.contest.forms import GroupForm
 from guardian.shortcuts import assign_perm, get_users_with_perms
 from harnas.contest.models import Contest, Task, GroupTaskDetails
 from harnas.contest.forms import ContestForm, NewsForm, TaskFetchForm
-from harnas.utils import permission_denied_message
 from harnas.checker.forms import SubmitForm
 from harnas.checker.models import Submit
 from harnas.checker import heraclient
@@ -36,8 +35,7 @@ def index(request):
 def details(request, contest_id):
     contest = Contest.objects.get(pk=contest_id)
     if not request.user.has_perm('contest.view_contest', contest):
-        permission_denied_message(request)
-        return HttpResponseRedirect('/')
+        raise PermissionDenied
 
     contest_form = ContestForm(instance=contest)
 
@@ -78,14 +76,12 @@ def edit(request, contest_id=None):
         contest = Contest.objects.get(pk=contest_id)
         form_post = reverse('contest_edit', args=[contest_id])
         if not request.user.has_perm('contest.manage_contest', contest):
-            permission_denied_message(request)
-            return HttpResponseRedirect('/')
+            raise PermissionDenied
     else:
         contest = Contest()
         form_post = reverse('contest_new')
         if not request.user.has_perm('contest.add_contest'):
-            permission_denied_message(request)
-            return HttpResponseRedirect('/')
+            raise PermissionDenied
 
     if request.method == 'POST':
         form = ContestForm(request.POST, instance=contest)
@@ -122,7 +118,7 @@ def edit(request, contest_id=None):
 def fetch_task(request, contest_id):
     contest = Contest.objects.get(pk=contest_id)
     if not request.user.has_perm('manage_contest', contest):
-        permission_denied_message(request)
+        raise PermissionDenied
     elif request.method == 'POST':
         form = TaskFetchForm(request.POST)
         if form.is_valid():

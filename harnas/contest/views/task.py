@@ -14,7 +14,6 @@ from harnas.contest.forms import TaskForm, UploadFileForm
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 
-from harnas.utils import permission_denied_message
 
 task_filesystem = FileSystemStorage(location=settings.TASK_STORAGE_PREFIX)
 
@@ -39,8 +38,7 @@ def index(request):
 def details(request, task_id):
     task = Task.objects.get(pk=task_id)
     if not request.user.has_perm('contest.view_task', task):
-        permission_denied_message(request)
-        return HttpResponseRedirect('/')
+        raise PermissionDenied
     if request.user.has_perm('contest.edit_task', task):
         task_path = str(task_id)
         task_files = task_filesystem.listdir(task_path)[1]

@@ -2,16 +2,14 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.contrib.auth.models import Group
 from django.shortcuts import render
-from django.views.decorators.http import require_POST, require_GET, \
-                                         require_http_methods
+from django.views.decorators.http import (require_POST, require_GET,
+                                          require_http_methods)
 from guardian.shortcuts import assign_perm
-
 from harnas.contest.models import Contest, GroupTaskDetails, Task
 from harnas.contest.forms import GroupForm, TaskDetailsForm
-from harnas.utils import permission_denied_message
 
 
 @login_required
@@ -44,7 +42,7 @@ def new(request, contest_id):
                                      messages.ERROR,
                                      'Group with that name already exists.')
     else:
-        permission_denied_message(request)
+        raise PermissionDenied
 
     return HttpResponseRedirect(reverse('contest_details',
                                         args=[contest_id, 'groups']))
@@ -55,8 +53,7 @@ def new(request, contest_id):
 def view(request, contest_id, group_id):
     contest = Contest.objects.get(pk=contest_id)
     if not request.user.has_perm('view_contest', contest):
-        permission_denied_message(request)
-        return HttpResponseRedirect('/')
+        raise PermissionDenied
     else:
         group = Group.objects.get(pk=group_id)
 
@@ -73,7 +70,7 @@ def view(request, contest_id, group_id):
 def edit_task_details(request, contest_id, group_id, task_id):
     if not request.user.has_perm('manage_contest',
                                  Contest.objects.get(pk=contest_id)):
-        permission_denied_message(request)
+        raise PermissionDenied
         return HttpResponseRedirect(reverse('contest_details',
                                             args=[contest_id]))
     else:
@@ -107,7 +104,7 @@ def edit_task_details(request, contest_id, group_id, task_id):
 def delete(request, contest_id, group_id):
     if not request.user.has_perm('manage_contest',
                                  Contest.objects.get(pk=contest_id)):
-        permission_denied_message(request)
+        raise PermissionDenied
         return HttpResponseRedirect(reverse('contest_details',
                                             args=[contest_id, 'groups']))
     else:
