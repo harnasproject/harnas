@@ -41,9 +41,7 @@ Vagrant.configure(2) do |config|
     sudo su - vagrant -c "mkdir /home/vagrant/.virtualenvs"
     echo "export WORKON_HOME=/home/vagrant/.virtualenvs" >> /home/vagrant/.bashrc
     echo "source /usr/share/virtualenvwrapper/virtualenvwrapper.sh" >> /home/vagrant/.bashrc
-    
-    # mkvirtualenv -p /usr/bin/python3.4 harnas
-    # cd /vagrant
-    # pip install -r requirements.txt
+
+    sudo su - vagrant -c "mkdir -p /harnas/task"
   SHELL
 end
