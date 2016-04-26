@@ -39,7 +39,6 @@ INSTALLED_APPS = (
     'harnas.contest',
     'harnas.checker',
     'harnas.userprofile',
-
 )
 
 MIDDLEWARE_CLASSES = (
@@ -105,18 +104,14 @@ LOGIN_REDIRECT_URL = '/'
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 ANONYMOUS_USER_ID = -1
+# User may change AUTHENTICATION_BACKENDS for LDAP login etc
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
 )
 
 with open(BASE_DIR + '/local_settings.py', 'r') as f:
     exec(f.read())
-
-# User may change AUTHENTICATION_BACKENDS for LDAP login etc
-
-AUTHENTICATION_BACKENDS = AUTHENTICATION_BACKENDS + (
-    'guardian.backends.ObjectPermissionBackend',
-)
 
 # custom user profile module
 AUTH_PROFILE_MODULE = 'userprofile.UserProfile'
