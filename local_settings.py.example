@@ -1,3 +1,5 @@
+# Database settings
+# Harnas now uses only 'default' and only postgresql is officially supported.
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -9,6 +11,8 @@ DATABASES = {
     }
 }
 
+# Used to store results of conversion markdown files to html/pandoc
+# done by pandoc.
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
@@ -25,9 +29,18 @@ ALLOWED_HOSTS = []
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+# Hera specific settings, see: https://github.com/zielmicha/hera
 HERA_USER = ""
 HERA_API_KEY = ""
 HERA_URL = "http://api.hera.dev/"
 HERA_AUTH = (HERA_USER, HERA_API_KEY)
 
-TASK_STORAGE_PREFIX = ''
+# Path to directory in which Harnaś should store task files
+# It must exist already and it must be writable by Harnaś
+TASK_STORAGE_PREFIX = '/harnas/task/'
+
+SITE_URL = 'harnas.ksi.ii.uj.edu.pl/'
+
+# Length of token, which is used to authorize Hera callbacks
+# Should be set once, Submit model depends on this var
+WEBHOOK_SECRET_LENGTH = 200
