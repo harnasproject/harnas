@@ -21,6 +21,7 @@ from harnas.checker.forms import SubmitForm
 from harnas.checker.models import Submit
 from harnas.contest.forms import (ContestForm, GroupForm, NewsForm,
                                   TaskFetchForm)
+from harnas.contest.helpers import save_task
 from harnas.contest.models import Contest, GroupTaskDetails, Task
 
 
@@ -121,29 +122,43 @@ def fetch_task(request, contest_id):
     elif request.method == 'POST':
         form = TaskFetchForm(request.POST)
         if form.is_valid():
-            parent_task = form.cleaned_data['task']
-            fetched_task = deepcopy(parent_task)
-            fetched_task.pk = None
+            fetched_task = copy_task(form)
             fetched_task.contest = contest
-            fetched_task.parent = parent_task
-            fetched_task.open = form.cleaned_data['open']
-            fetched_task.deadline = form.cleaned_data['deadline']
-            fetched_task.close = form.cleaned_data['close']
-            fetched_task.save()
-            messages.add_message(request,
-                                 messages.SUCCESS,
-                                 "New task has been added to contest %s."
-                                 % contest.name)
-            # add tasks to groups
-            for group in get_groups_with_perms(contest, attach_perms=True):
-                GroupTaskDetails.objects.create(task=fetched_task,
-                                                group=group,
-                                                open=fetched_task.open,
-                                                deadline=fetched_task.deadline,
-                                                close=fetched_task.close)
+            if save_task(fetched_task):
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    'New task has been added to contest %s.' % contest.name)
+                add_task_to_groups(contest, fetched_task)
+            else:
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    'Unable to fetch task %s. Please report this accident'
+                    ' to administrator.' % fetched_task)
 
-    return HttpResponseRedirect(reverse('contest_details',
-                                        args=[contest_id, 'tasks']))
+    return HttpResponseRedirect(
+        reverse('contest_details', args=[contest_id]) + '?current_tab=tasks')
+
+
+def copy_task(form):
+    parent_task = form.cleaned_data['task']
+    fetched_task = deepcopy(parent_task)
+    fetched_task.pk = None
+    fetched_task.parent = parent_task
+    fetched_task.open = form.cleaned_data['open']
+    fetched_task.deadline = form.cleaned_data['deadline']
+    fetched_task.close = form.cleaned_data['close']
+    return fetched_task
+
+
+def add_task_to_groups(contest, task):
+    for group in get_groups_with_perms(contest, attach_perms=True):
+        GroupTaskDetails.objects.create(task=task,
+                                        group=group,
+                                        open=task.open,
+                                        deadline=task.deadline,
+                                        close=task.close)
 
 
 @require_safe

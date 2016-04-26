@@ -6,7 +6,7 @@ task_urlpatterns = [
         task.index,
         name='task_index'),
     url(r'^new$',
-        task.edit,
+        task.new,
         name='task_new'),
     url(r'^(?P<task_id>\d+)/', include([
         url(r'^$',

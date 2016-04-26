@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key
@@ -9,8 +10,10 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods, require_safe
 from guardian.shortcuts import assign_perm, get_objects_for_user
+
 from harnas.checker.forms import SubmitForm
 from harnas.contest.forms import TaskForm, UploadFileForm
+from harnas.contest.helpers import save_task
 from harnas.contest.models import Task
 
 task_filesystem = FileSystemStorage(location=settings.TASK_STORAGE_PREFIX)
@@ -54,33 +57,60 @@ def details(request, task_id):
 
 @require_http_methods(['GET', 'POST'])
 @login_required
-def edit(request, task_id=None):
-    if task_id:
-        task = Task.objects.get(pk=task_id)
-        form_post = reverse('task_edit', args=[task_id])
-        if not request.user.has_perm('contest.edit_task', task):
-            raise PermissionDenied
-    else:
-        task = Task()
-        form_post = reverse('task_new')
-        if not request.user.has_perm('contest.add_task'):
-            raise PermissionDenied
-    if request.method == "POST":
+def new(request):
+    form_post = reverse('task_new')
+    if not request.user.has_perm('contest.add_task'):
+        raise PermissionDenied
+
+    def new_task_assign_perm(task):
+        assign_perm('contest.edit_task', request.user, task)
+        assign_perm('contest.view_task', request.user, task)
+
+    return handle_task_form(request, form_post, Task(),
+                            success_action=new_task_assign_perm)
+
+
+@require_http_methods(['GET', 'POST'])
+@login_required
+def edit(request, task_id):
+    assert task_id is not None
+
+    task = Task.objects.get(pk=task_id)
+    form_post = reverse('task_edit', args=[task_id])
+    if not request.user.has_perm('contest.edit_task', task):
+        raise PermissionDenied
+
+    def invalidate_task_cache(task):
+        cache_key = make_template_fragment_key('task_description', [task.pk])
+        cache.delete(cache_key)
+
+    return handle_task_form(request, form_post, task,
+                            success_action=invalidate_task_cache)
+
+
+def handle_task_form(request, form_post, task, success_action):
+    if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            task = form.save(commit=False)
+            if not task.author_id:
+                task.author_id = request.user.pk
+            if save_task(task):
+                success_action(task)
+                messages.add_message(
+                    request,
+                    messages.SUCCESS,
+                    'Task %s saved successfully.' % task)
+                return HttpResponseRedirect(
+                    reverse('task_details', args=[task.pk]))
+            else:
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    'Unable to save this task. '
+                    'Please report this accident to administrator.')
     else:
         form = TaskForm(instance=task)
-    if form.is_valid():
-        new_task = form.save(commit=False)
-        if task_id is None:
-            new_task.author_id = request.user.pk
-        new_task.save()
-        assign_perm('contest.edit_task', request.user, new_task)
-        assign_perm('contest.view_task', request.user, new_task)
-        cache_key = make_template_fragment_key('task_description',
-                                               [new_task.pk])
-        cache.delete(cache_key)
-        return HttpResponseRedirect(reverse('task_details',
-                                            args=[new_task.pk]))
     return render(request, 'contest/task_new.html', {
         'form': form,
         'form_post': form_post

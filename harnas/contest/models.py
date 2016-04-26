@@ -1,5 +1,6 @@
 import os
 
+import shutil
 from django.conf import settings
 from django.contrib.auth.models import Group, User
 from django.db import models
@@ -74,18 +75,40 @@ class Task(models.Model):
             return self.name
 
 
+class TaskFilesDirectoryError(Exception):
+    pass
+
+
 @receiver(post_save,
           sender=Task,
           dispatch_uid="make_directory_for_task_files")
 def make_directory_for_task_files(sender, instance, **kwargs):
-    if kwargs['created']:
-        task_dir = os.path.join(settings.TASK_STORAGE_PREFIX, str(instance.pk))
-        if instance.parent:
-            parent_dir = os.path.join(settings.TASK_STORAGE_PREFIX,
-                                      str(instance.parent.pk))
-            helpers.copy_directory(parent_dir, task_dir)
-        else:
-            os.mkdir(task_dir)
+    task_dir = os.path.join(settings.TASK_STORAGE_PREFIX, str(instance.pk))
+    if os.path.exists(task_dir):
+        return
+    if instance.parent:
+        fetch_task_files(task_dir, instance.parent.pk)
+    else:
+        make_task_dir(task_dir)
+
+
+def fetch_task_files(task_dir: str, source_task_id: int) -> None:
+    parent_dir = os.path.join(settings.TASK_STORAGE_PREFIX, str(source_task_id))
+    try:
+        helpers.copy_directory(parent_dir, task_dir)
+    except Exception as e:
+        if os.path.exists(task_dir):
+            shutil.rmtree(task_dir)
+        raise TaskFilesDirectoryError(
+            'Unable to copy task files: %s' % e)
+
+
+def make_task_dir(task_dir: str) -> None:
+    try:
+        os.mkdir(task_dir)
+    except Exception as e:
+        raise TaskFilesDirectoryError(
+            'Unable to make directory for task files: %s' % e)
 
 
 class TestCase(models.Model):
