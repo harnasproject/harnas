@@ -45,7 +45,7 @@ def new(request, contest_id):
         raise PermissionDenied
 
     return HttpResponseRedirect(reverse('contest_details',
-                                        args=[contest_id, 'groups']))
+                                        args=[contest_id]))
 
 
 @login_required
@@ -106,7 +106,7 @@ def delete(request, contest_id, group_id):
                                  Contest.objects.get(pk=contest_id)):
         raise PermissionDenied
         return HttpResponseRedirect(reverse('contest_details',
-                                            args=[contest_id, 'groups']))
+                                            args=[contest_id]))
     else:
         try:
             Group.objects.get(pk=group_id).delete()
@@ -118,4 +118,4 @@ def delete(request, contest_id, group_id):
                                  messages.ERROR,
                                  "Group does not exists.")
         return HttpResponseRedirect(reverse('contest_details',
-                                            args=[contest_id, 'groups']))
+                                            args=[contest_id]))

@@ -15,7 +15,7 @@ def new(request, contest_id):
         raise PermissionDenied
         return HttpResponseRedirect(request,
                                     reverse('contest_details',
-                                            args=[contest_id, 'news']))
+                                            args=[contest_id]))
     else:
         form = NewsForm(request.POST)
         if form.is_valid():
@@ -29,7 +29,7 @@ def new(request, contest_id):
                                  messages.SUCCESS,
                                  "New news has been created.")
         return HttpResponseRedirect(reverse('contest_details',
-                                            args=[contest_id, 'news']))
+                                            args=[contest_id]))
 
 
 @require_safe
@@ -39,7 +39,7 @@ def delete(request, contest_id, news_id):
         raise PermissionDenied
         return HttpResponseRedirect(request,
                                     reverse('contest_details',
-                                            args=[contest_id, 'news']))
+                                            args=[contest_id]))
     else:
         try:
             news = News.objects.get(pk=news_id)
@@ -50,7 +50,7 @@ def delete(request, contest_id, news_id):
         except ObjectDoesNotExist:
             raise PermissionDenied
         return HttpResponseRedirect(reverse('contest_details',
-                                            args=[contest_id, 'news']))
+                                            args=[contest_id]))
 
 
 @require_http_methods(['POST', 'GET'])
@@ -60,7 +60,7 @@ def edit(request, contest_id, news_id):
         raise PermissionDenied
         return HttpResponseRedirect(request,
                                     reverse('contest_details',
-                                            args=[contest_id, 'news']))
+                                            args=[contest_id]))
     else:
         try:
             news = News.objects.get(pk=news_id)
@@ -75,4 +75,4 @@ def edit(request, contest_id, news_id):
         except ObjectDoesNotExist:
             raise PermissionDenied
         return HttpResponseRedirect(reverse('contest_details',
-                                            args=[contest_id, 'news']))
+                                            args=[contest_id]))
