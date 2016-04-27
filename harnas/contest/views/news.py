@@ -13,9 +13,6 @@ def new(request, contest_id):
     if not request.user.has_perm('manage_contest',
                                  Contest.objects.get(pk=contest_id)):
         raise PermissionDenied
-        return HttpResponseRedirect(request,
-                                    reverse('contest_details',
-                                            args=[contest_id]))
     else:
         form = NewsForm(request.POST)
         if form.is_valid():
@@ -28,8 +25,9 @@ def new(request, contest_id):
             messages.add_message(request,
                                  messages.SUCCESS,
                                  "New news has been created.")
-        return HttpResponseRedirect(reverse('contest_details',
-                                            args=[contest_id]))
+        return HttpResponseRedirect(
+            reverse('contest_details',
+                    args=[contest_id]) + '?current_tab=news')
 
 
 @require_safe
@@ -37,9 +35,6 @@ def delete(request, contest_id, news_id):
     if not request.user.has_perm('manage_contest',
                                  Contest.objects.get(pk=contest_id)):
         raise PermissionDenied
-        return HttpResponseRedirect(request,
-                                    reverse('contest_details',
-                                            args=[contest_id]))
     else:
         try:
             news = News.objects.get(pk=news_id)
@@ -49,8 +44,9 @@ def delete(request, contest_id, news_id):
                                  "News deleted successfully.")
         except ObjectDoesNotExist:
             raise PermissionDenied
-        return HttpResponseRedirect(reverse('contest_details',
-                                            args=[contest_id]))
+        return HttpResponseRedirect(
+            reverse('contest_details',
+                    args=[contest_id]) + '?current_tab=news')
 
 
 @require_http_methods(['POST', 'GET'])
@@ -58,9 +54,6 @@ def edit(request, contest_id, news_id):
     if not request.user.has_perm('manage_contest',
                                  Contest.objects.get(pk=contest_id)):
         raise PermissionDenied
-        return HttpResponseRedirect(request,
-                                    reverse('contest_details',
-                                            args=[contest_id]))
     else:
         try:
             news = News.objects.get(pk=news_id)
@@ -74,5 +67,6 @@ def edit(request, contest_id, news_id):
                 })
         except ObjectDoesNotExist:
             raise PermissionDenied
-        return HttpResponseRedirect(reverse('contest_details',
-                                            args=[contest_id]))
+        return HttpResponseRedirect(
+            reverse('contest_details',
+                    args=[contest_id]) + '?current_tab=news')

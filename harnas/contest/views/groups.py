@@ -44,8 +44,8 @@ def new(request, contest_id):
     else:
         raise PermissionDenied
 
-    return HttpResponseRedirect(reverse('contest_details',
-                                        args=[contest_id]))
+    return HttpResponseRedirect(
+        reverse('contest_details', args=[contest_id]) + '?current_tab=groups')
 
 
 @login_required
@@ -71,8 +71,9 @@ def edit_task_details(request, contest_id, group_id, task_id):
     if not request.user.has_perm('manage_contest',
                                  Contest.objects.get(pk=contest_id)):
         raise PermissionDenied
-        return HttpResponseRedirect(reverse('contest_details',
-                                            args=[contest_id]))
+        return HttpResponseRedirect(
+            reverse('contest_details',
+                    args=[contest_id]) + '?current_tab=groups')
     else:
         if request.method == 'POST':
             form = TaskDetailsForm(request.POST)
