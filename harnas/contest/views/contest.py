@@ -188,7 +188,6 @@ def save_submit(request, contest_id):
             submit.submitter = request.user
             submit.task = submit_form.cleaned_data['task']
             submit.solution = bytes(request.FILES['solution'].read())
-            # submit.status = Submit.QUEUED
             submit.webhook_secret = webhook_secret
             submit.save()
 

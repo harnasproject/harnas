@@ -93,7 +93,8 @@ def make_directory_for_task_files(sender, instance, **kwargs):
 
 
 def fetch_task_files(task_dir: str, source_task_id: int) -> None:
-    parent_dir = os.path.join(settings.TASK_STORAGE_PREFIX, str(source_task_id))
+    parent_dir = os.path.join(settings.TASK_STORAGE_PREFIX,
+                              str(source_task_id))
     try:
         helpers.copy_directory(parent_dir, task_dir)
     except Exception as e:
@@ -112,6 +113,25 @@ def make_task_dir(task_dir: str) -> None:
 
 
 class TestCase(models.Model):
+    QUEUED = "QUE"
+    MEMORY_LIMIT = "MEM"
+    TIME_LIMIT = "TLE"
+    ACCEPTED = "OK"
+    INTERNAL_ERROR = "INT"
+    WRONG_ANSWER = "ANS"
+    COMPILATION_ERROR = "CMP"
+    RUNTIME_ERROR = "RTE"
+    STATUS_CHOICES = (
+        (QUEUED, "In checking queue"),
+        (MEMORY_LIMIT, "Memory limit exceeded"),
+        (TIME_LIMIT, "Time limit exceeded"),
+        (ACCEPTED, "Accepted"),
+        (INTERNAL_ERROR, "Internal error"),
+        (WRONG_ANSWER, "Wrong answer"),
+        (COMPILATION_ERROR, "Compilation error"),
+        (RUNTIME_ERROR, "Runtime error"),
+    )
+
     task = models.ForeignKey(Task)
     max_memory = models.PositiveIntegerField()
     max_duration = models.PositiveIntegerField()

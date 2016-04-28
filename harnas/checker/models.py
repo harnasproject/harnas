@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from harnas.contest.models import TestCase
 
 
 class TestEnvironment(models.Model):
@@ -19,31 +20,12 @@ class TestEnvironment(models.Model):
 
 
 class Submit(models.Model):
-    QUEUED = "QUE"
-    MEMORY_LIMIT = "MEM"
-    TIME_LIMIT = "TLE"
-    ACCEPTED = "OK"
-    INTERNAL_ERROR = "INT"
-    WRONG_ANSWER = "ANS"
-    COMPILATION_ERROR = "CMP"
-    RUNTIME_ERROR = "RTE"
-    STATUS_CHOICES = (
-        (QUEUED, "In checking queue"),
-        (MEMORY_LIMIT, "Memory limit exceeded"),
-        (TIME_LIMIT, "Time limit exceeded"),
-        (ACCEPTED, "Accepted"),
-        (INTERNAL_ERROR, "Internal error"),
-        (WRONG_ANSWER, "Wrong answer"),
-        (COMPILATION_ERROR, "Compilation error"),
-        (RUNTIME_ERROR, "Runtime error"),
-    )
-
     submitter = models.ForeignKey(User)
     submitted = models.DateTimeField(auto_now_add=True)
     task = models.ForeignKey('contest.Task')
     solution = models.BinaryField()
     status = models.CharField(max_length=3,
-                              choices=STATUS_CHOICES)
+                              choices=TestCase.STATUS_CHOICES)
     webhook_secret = models.CharField(
                         max_length=settings.WEBHOOK_SECRET_LENGTH)
 
@@ -51,7 +33,7 @@ class Submit(models.Model):
         return self.id
 
     def change_status(self, status):
-        if status not in [choice[0] for choice in self.STATUS_CHOICES]:
+        if status not in [choice[0] for choice in TestCase.STATUS_CHOICES]:
             raise ValueError("Invalid status")
         else:
             self.status = status
