@@ -3,6 +3,7 @@
 {% load cache %}
 {% load guardian_tags %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block title %}
     {{ block.super }} | {{ task.name }}
 {% endblock %}
@@ -28,59 +29,89 @@
     </div>
     {% endif %}
     {% if 'edit_task' in task_perms %}
-        <nav>
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active">
-                    <a href="#description" aria-controls="description" role="tab" data-toggle="tab">
-                        Description
-                    </a>
-                </li>
-                <li role="presentation">
-                    <a href="#test_cases" aria-controls="test_cases" role="tab" data-toggle="tab">
-                        Test cases
-                    </a>
-                </li>
-                <li role="presentation">
-                    <a href="#files" aria-controls="files" role="tab" data-toggle="tab">
-                        Files
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        <div class="tab-content">
-            <div class="tab-pane active" role="tabpanel" id="description">
-            {% cache 86400 task_description task.pk %}
-                {{ task.description|to_html }}
-            {% endcache %}
-            </div>
-            <div class="tab-pane" role="tabpanel" id="test_cases"></div>
-            <div class="tab-pane" role="tabpanel" id="files">
-                <form action="{% url 'task_upload_file' task.pk %}" method="post"  enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ upload_file_form|crispy }}
-                    <input type="submit" value="Submit" class="btn btn-default">
-                </form>
-                <table class="table table-striped">
-                    <tr>
-                        <th>File name</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    {% for file in task_files %}
-                    <tr>
-                        <td>{{ file }}</td>
-                        <td><a href="{% url 'task_download_file' task.pk  %}?filename={{ file }}" class="btn btn-default">Download</a></td>
-                        <td><a href="{% url 'task_delete_file' task.pk %}?filename={{ file }}" class="btn btn-default">Delete</a></td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-    {% else %}
-        <p>
+    <nav>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation">
+                <a href="#description" aria-controls="description" role="tab" data-toggle="tab">
+                    Description
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="#test_cases" aria-controls="test_cases" role="tab" data-toggle="tab">
+                    Test cases
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="#files" aria-controls="files" role="tab" data-toggle="tab">
+                    Files
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="tab-content">
+        <div class="tab-pane" role="tabpanel" id="description">
         {% cache 86400 task_description task.pk %}
             {{ task.description|to_html }}
         {% endcache %}
-        </p>
+        </div>
+        <div class="tab-pane" role="tabpanel" id="test_cases">
+            <table class="table table-striped">
+                <tr>
+                    <th>Test case id</th>
+                    <th>Max memory [MB]</th>
+                    <th>Max duration [s]</th>
+                    <th></th>
+                </tr>
+                {% for testcase in testcases %}
+                <tr>
+                    <td>{{ testcase.pk }}</td>
+                    <td>{{ testcase.max_memory }}</td>
+                    <td>{{ testcase.max_duration }}</td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+                <form action="{% url 'testcase_new' task.pk %}" method="post">
+                    <td></td>
+                    {% csrf_token %}
+                    {% for field in testcase_form %}
+                    <td>
+                        {{ field }}
+                    </td>
+                    {% endfor %}
+                    <td>
+                        <input type="submit" value="Submit" class="btn btn-default">
+                    </td>
+                </form>
+            </table>
+        </div>
+        <div class="tab-pane" role="tabpanel" id="files">
+            <form action="{% url 'task_upload_file' task.pk %}" method="post"  enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ upload_file_form|crispy }}
+                <input type="submit" value="Submit" class="btn btn-default">
+            </form>
+            <table class="table table-striped">
+                <tr>
+                    <th>File name</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                {% for file in task_files %}
+                <tr>
+                    <td>{{ file }}</td>
+                    <td><a href="{% url 'task_download_file' task.pk  %}?filename={{ file }}" class="btn btn-default">Download</a></td>
+                    <td><a href="{% url 'task_delete_file' task.pk %}?filename={{ file }}" class="btn btn-default">Delete</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <p>
+    {% cache 86400 task_description task.pk %}
+        {{ task.description|to_html }}
+    {% endcache %}
+    </p>
     {% endif %}
+    <script type="text/javascript" src="{% static 'js/contest.js' %}"></script>
 {% endblock %}

@@ -12,7 +12,7 @@ from django.views.decorators.http import require_http_methods, require_safe
 from guardian.shortcuts import assign_perm, get_objects_for_user
 
 from harnas.checker.forms import SubmitForm
-from harnas.contest.forms import TaskForm, UploadFileForm
+from harnas.contest.forms import TaskForm, UploadFileForm, TestCaseForm
 from harnas.contest.helpers import save_task
 from harnas.contest.models import Task
 
@@ -44,14 +44,18 @@ def details(request, task_id):
         task_path = str(task_id)
         task_files = task_filesystem.listdir(task_path)[1]
         upload_file_form = UploadFileForm()
+        testcase_form = TestCaseForm()
     if request.user.has_perm('contest.submit_solution', task):
         submit_form = SubmitForm(contest=task.contest)
+    testcases = task.testcase_set.all()
 
     return render(request, 'contest/task_details.html', {
         'task': task,
         'task_files': task_files,
         'upload_file_form': upload_file_form,
-        'submit_form': submit_form
+        'submit_form': submit_form,
+        'testcase_form': testcase_form,
+        'testcases': testcases,
     })
 
 

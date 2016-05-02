@@ -56,6 +56,8 @@ def details(request, contest_id):
 
     tasks = Task.objects.filter(contest=contest)
 
+    # test
+
     return render(request, 'contest/contest_details.html', {
         'contest': contest,
         'contest_form': contest_form,

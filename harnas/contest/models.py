@@ -119,7 +119,7 @@ class TestCase(models.Model):
     ACCEPTED = "OK"
     INTERNAL_ERROR = "INT"
     WRONG_ANSWER = "ANS"
-    COMPILATION_ERROR = "CMP"
+    COMPILATION_ERROR = "CME"
     RUNTIME_ERROR = "RTE"
     STATUS_CHOICES = (
         (QUEUED, "In checking queue"),

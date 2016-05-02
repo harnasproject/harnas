@@ -1,5 +1,5 @@
 from django.conf.urls import include, url
-from harnas.contest.views import contest, groups, news, submit, task
+from harnas.contest.views import contest, groups, news, submit, task, testcase
 
 task_urlpatterns = [
     url(r'^$',
@@ -24,6 +24,14 @@ task_urlpatterns = [
         url(r'^delete_file/$',
             task.delete_file,
             name='task_delete_file'),
+        url(r'^testcase/', include([
+            url(r'^new/$',
+                testcase.new,
+                name='testcase_new'),
+            url(r'^edit/(?P<testcase_id>\d+)/',
+                testcase.edit,
+                name='testcase_edit'),
+        ]))
     ])),
 ]
 

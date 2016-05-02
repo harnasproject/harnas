@@ -9,8 +9,7 @@ from harnas.contest.models import (Contest, GroupTaskDetails, News, Task,
 class TestCaseForm(ModelForm):
     class Meta:
         model = TestCase
-        fields = ['task', 'max_memory', 'max_duration', 'comparator',
-                  'executor', 'comparator', 'in_file_path', 'out_file_path']
+        fields = ['max_memory', 'max_duration']
 
 
 class UploadFileForm(Form):
