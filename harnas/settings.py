@@ -101,8 +101,6 @@ SITE_ID = 1
 ACCOUNT_ACTIVATION_DAYS = 7
 LOGIN_REDIRECT_URL = '/'
 
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
 ANONYMOUS_USER_ID = -1
 # User may change AUTHENTICATION_BACKENDS for LDAP login etc
 AUTHENTICATION_BACKENDS = (
@@ -118,3 +116,6 @@ AUTH_PROFILE_MODULE = 'userprofile.UserProfile'
 
 # custom registration form
 REGISTRATION_FORM = 'harnas.customregistration.forms.RegistrationForm'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+CRISPY_FAIL_SILENTLY = not DEBUG

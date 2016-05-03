@@ -44,6 +44,8 @@ def details(request, task_id):
         task_path = str(task_id)
         task_files = task_filesystem.listdir(task_path)[1]
         upload_file_form = UploadFileForm()
+        upload_file_form.helper.form_action = reverse('task_upload_file',
+                                                      args=[task.pk])
         testcase_form = TestCaseForm()
     if request.user.has_perm('contest.submit_solution', task):
         submit_form = SubmitForm(contest=task.contest)

@@ -85,11 +85,7 @@
             </table>
         </div>
         <div class="tab-pane" role="tabpanel" id="files">
-            <form action="{% url 'task_upload_file' task.pk %}" method="post"  enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ upload_file_form|crispy }}
-                <input type="submit" value="Submit" class="btn btn-default">
-            </form>
+            {% crispy upload_file_form %}
             <table class="table table-striped">
                 <tr>
                     <th>File name</th>

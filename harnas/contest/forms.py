@@ -1,3 +1,6 @@
+from crispy_forms.bootstrap import StrictButton, InlineField
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit, Layout
 from django import forms
 from django.contrib.auth.models import Group
 from django.forms import Form, ModelForm
@@ -13,7 +16,19 @@ class TestCaseForm(ModelForm):
 
 
 class UploadFileForm(Form):
-    file = forms.FileField(label="Upload new file")
+    file = forms.FileField()
+
+    def __init__(self, *args, **kwargs):
+        super(UploadFileForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+        self.helper.form_id = 'uploadFileForm'
+        self.helper.form_class = 'form-inline'
+        self.helper.field_template = 'bootstrap3/layout/inline_field.html'
+        self.helper.layout = Layout(
+            'file',
+            StrictButton('Upload', css_class='btn btn-default'),
+        )
 
 
 class TaskForm(ModelForm):
