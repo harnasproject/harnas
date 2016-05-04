@@ -1,3 +1,5 @@
+import os
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -8,7 +10,8 @@ from django.core.files.storage import FileSystemStorage
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.views.decorators.http import require_http_methods, require_safe
+from django.views.decorators.http import (require_http_methods, require_safe,
+                                          require_POST)
 from guardian.shortcuts import assign_perm, get_objects_for_user
 
 from harnas.checker.forms import SubmitForm
@@ -41,8 +44,8 @@ def details(request, task_id):
     if not request.user.has_perm('contest.view_task', task):
         raise PermissionDenied
     if request.user.has_perm('contest.edit_task', task):
-        task_path = str(task_id)
-        task_files = task_filesystem.listdir(task_path)[1]
+        task_path = os.path.join(settings.TASK_STORAGE_PREFIX, str(task_id))
+        task_files = task_filesystem.listdir(task_path)[1]  # [0] - dirs
         upload_file_form = UploadFileForm()
         upload_file_form.helper.form_action = reverse('task_upload_file',
                                                       args=[task.pk])
@@ -123,7 +126,7 @@ def handle_task_form(request, form_post, task, success_action):
     })
 
 
-@require_http_methods(['POST'])
+@require_POST
 @login_required
 def upload_file(request, task_id):
     task = Task.objects.get(pk=task_id)
@@ -132,10 +135,10 @@ def upload_file(request, task_id):
     form = UploadFileForm(request.POST, request.FILES)
     if form.is_valid():
         file = request.FILES['file']
-        task_path = str(task_id) + '/'
-        task_filesystem.save(task_path + file.name, file)
-    return HttpResponseRedirect(reverse('task_details',
-                                        args=[task.pk]))
+        file_path = os.path.join(str(task_id), file.name)
+        task_filesystem.save(file_path, file)
+    return HttpResponseRedirect(
+        reverse('task_details', args=[task.pk]) + '?current_tab=files')
 
 
 @require_safe
@@ -144,15 +147,10 @@ def download_file(request, task_id):
     task = Task.objects.get(pk=task_id)
     if not request.user.has_perm('contest.edit_task', task):
         raise PermissionDenied
-    task_path = str(task_id) + '/'
-    filename = request.GET.get('filename', None)
-    file_path = task_path + filename
-    file_exists = False
-    if filename is not None:
-        file_exists = task_filesystem.exists(file_path)
-    if not file_exists:
+    file_path = get_existing_file(request, task_id)
+    if not file_path:
         raise Http404
-    file = task_filesystem.open(task_path + filename)
+    file = task_filesystem.open(file_path)
     response = HttpResponse(file, content_type='application/octet-stream')
     response['Content-Disposition'] = 'attachment; filename="%s"' % file.name
     return response
@@ -164,14 +162,19 @@ def delete_file(request, task_id):
     task = Task.objects.get(pk=task_id)
     if not request.user.has_perm('contest.edit_task', task):
         raise PermissionDenied
-    task_path = str(task_id) + '/'
-    filename = request.GET.get('filename', None)
-    file_path = task_path + filename
-    file_exists = False
-    if filename is not None:
-        file_exists = task_filesystem.exists(file_path)
-    if not file_exists:
+    file_path = get_existing_file(request, task_id)
+    if not file_path:
         raise Http404
     task_filesystem.delete(file_path)
-    return HttpResponseRedirect(reverse('task_details',
-                                        args=[task.pk]))
+    return HttpResponseRedirect(
+        reverse('task_details', args=[task.pk]) + '?current_tab=files')
+
+
+def get_existing_file(request, task_id):
+    filename = request.GET.get('filename', None)
+    if not filename:
+        return None
+    file_path = os.path.join(str(task_id), filename)
+    if not task_filesystem.exists(file_path):
+        return None
+    return file_path

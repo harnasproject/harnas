@@ -133,12 +133,17 @@ class TestCase(models.Model):
     )
 
     task = models.ForeignKey(Task)
+    name = models.CharField(max_length=100, null=True, default=None)
     max_memory = models.PositiveIntegerField()
     max_duration = models.PositiveIntegerField()
+    run_order_id = models.PositiveSmallIntegerField(default=0)
     comparator = models.CharField(max_length=500)
     executor = models.CharField(max_length=500)
-    in_file_path = models.CharField(max_length=500)
-    out_file_path = models.CharField(max_length=500)
+    in_file_path = models.FilePathField(max_length=500)
+    out_file_path = models.FilePathField(max_length=500)
+
+    def __str__(self):
+        return self.name
 
 
 class GroupTaskDetails(models.Model):

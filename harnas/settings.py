@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'harnas.contest',
     'harnas.checker',
     'harnas.userprofile',
+    'floppyforms'
 )
 
 MIDDLEWARE_CLASSES = (

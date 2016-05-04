@@ -57,35 +57,43 @@
         <div class="tab-pane" role="tabpanel" id="test_cases">
             <table class="table table-striped">
                 <tr>
-                    <th>Test case id</th>
+                    <th>#</th>
+                    <th>Test case name</th>
                     <th>Max memory [MB]</th>
-                    <th>Max duration [s]</th>
+                    <th>Max duration [ms]</th>
+                    <th class="col-md-5">Input file</th>
+                    <th class="col-md-5">Output file</th>
                     <th></th>
                 </tr>
                 {% for testcase in testcases %}
                 <tr>
-                    <td>{{ testcase.pk }}</td>
+                    <td>{{ testcase.run_order_id }}</td>
+                    <td>{{ testcase.name }}</td>
                     <td>{{ testcase.max_memory }}</td>
                     <td>{{ testcase.max_duration }}</td>
+                    <td>{{ testcase.in_file_path }}</td>
+                    <td>{{ testcase.out_file_path }}</td>
                     <td></td>
                 </tr>
                 {% endfor %}
-                <form action="{% url 'testcase_new' task.pk %}" method="post">
-                    <td></td>
-                    {% csrf_token %}
-                    {% for field in testcase_form %}
-                    <td>
-                        {{ field }}
-                    </td>
-                    {% endfor %}
-                    <td>
-                        <input type="submit" value="Submit" class="btn btn-default">
-                    </td>
-                </form>
+                <tr>
+                    <form action="{% url 'testcase_new' task.pk %}" method="post" enctype="multipart/form-data">
+                        <td>{{ testcases|length }}</td>
+                        {% csrf_token %}
+                        {% for field in testcase_form %}
+                        <td>
+                            {{ field }}
+                        </td>
+                        {% endfor %}
+                        <td>
+                            <input type="submit" value="Add test" class="btn btn-sm">
+                        </td>
+                    </form>
+                </tr>
             </table>
         </div>
         <div class="tab-pane" role="tabpanel" id="files">
-            {% crispy upload_file_form %}
+            <p>{% crispy upload_file_form %}</p>
             <table class="table table-striped">
                 <tr>
                     <th>File name</th>
@@ -110,4 +118,5 @@
     </p>
     {% endif %}
     <script type="text/javascript" src="{% static 'js/contest.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap-filestyle.min.js' %}"></script>
 {% endblock %}
