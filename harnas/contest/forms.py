@@ -27,7 +27,7 @@ class UploadFileForm(Form):
         self.helper.field_template = 'bootstrap3/layout/inline_field.html'
         self.helper.layout = Layout(
             'file',
-            StrictButton('Upload', css_class='btn btn-default'),
+            Submit('submit', 'Submit', css_class='btn btn-default'),
         )
 
 
