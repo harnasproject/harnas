@@ -243,7 +243,7 @@ class _StreamBase(object):
         if isinstance(file_obj_or_name, str):
             if not size:
                 size = os.path.getsize(file_obj_or_name)
-            fileobj = open(file_obj_or_name, 'r')
+            fileobj = open(file_obj_or_name, 'rb')
         else:
             fileobj = file_obj_or_name
             assert size is not None
